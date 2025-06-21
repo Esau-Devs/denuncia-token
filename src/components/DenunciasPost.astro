@@ -16,24 +16,15 @@ const { id } = Astro.props;
         <div>
           <h3 class="flex flex-row text-center gap-3 mb-3">
             <Finger className="w-5 h-5" />
-            Su Codigo de Ususario:
+            Su Codigo de Usuario:
           </h3>
           <div
-            class="py-2 px-4 font-bold text-xl bg-white/10 backdrop-invert backdrop-opacity-10 rounded-sm"
+            class="py-2 px-4 font-bold text=xl bg-white/10 backdrop-invert backdrop-opacity-10 rounded-sm"
           >
             {id}
           </div>
         </div>
-        <!-- CopyBotones -->
-        <CopyButtom id={id} client:load />
       </div>
     </div>
-    <p
-      class="flex gap-2 m-3 items-center text-center text-gray-500 flex-col sm:flex-row"
-    >
-      <CircleInfo className="w-5 h-5  flex-shrink-0" />
-      Guarde este código en un lugar seguro. Lo necesitará para acceder a sus denuncias
-      en el futuro.
-    </p>
   </nav>
 </div>
