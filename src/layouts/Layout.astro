@@ -1,22 +1,92 @@
+---
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+---
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <!-- Metadescripción para SEO -->
+    <meta
+      name="description"
+      content="Plataforma segura y confidencial para realizar denuncias ciudadanas. Protegemos tu identidad y tus datos mediante cifrado GPG y PKI."
+    />
+
+    <!-- Palabras clave (opcional) -->
+    <meta
+      name="keywords"
+      content="denuncias anónimas, seguridad digital, cifrado, PKI, GPG, confidencialidad, protección de datos"
+    />
+
+    <!-- Autor (opcional) -->
+    <meta name="author" content="Nombre del desarrollador o institución" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Denuncias FGR</title>
+  </head>
+  <body class="flex flex-col bg-[#f8fafc]">
+    <header
+      class="bg-gradient-to-r from-[#1e293b] via-[#2a3b5d] to-[#0c3b87]
+      p-6 flex items-center"
+    >
+      <Nav />
+    </header>
+    <main
+      class="container mx-auto p-2 md:p-10 lg:p-20 flex-grow mt-8 mb-8 sm:mt-0 sm:mb-0"
+    >
+      <slot />
+    </main>
+    <footer
+      class="bg-gradient-to-r from-[#0c3b87] via-[#1e293b] to-[#2a3b5d] text-white py-6 px-20"
+    >
+      <Footer />
+    </footer>
+  </body>
 </html>
 
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+  body {
+    font-family: "Montserrat", sans-serif;
+    background-color: #f8fafc;
+  }
+</style>
+<style is:global>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    line-height: 1.6;
+  }
+  @font-face {
+    font-family: "Montserrat";
+    src: url(/fonts/Montserrat-Regular.ttf) format("truetype");
+    font-weight: 400;
+    font-display: swap;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Montserrat";
+    src: url(/fonts/Montserrat-Medium.ttf) format("truetype");
+    font-weight: 500;
+    font-display: swap;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Montserrat";
+    src: url(/fonts/Montserrat-SemiBold.ttf) format("truetype");
+    font-weight: 600;
+    font-display: swap;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Montserrat";
+    src: url(/fonts/Montserrat-Bold.ttf) format("truetype");
+    font-weight: 700;
+    font-display: swap;
+    font-style: normal;
+  }
 </style>
