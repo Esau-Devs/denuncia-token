@@ -1,0 +1,39 @@
+---
+import { Finger, CircleInfo } from "../icons/AllIcons";
+import CopyButtom from "./CopyButtom.jsx";
+
+const { id } = Astro.props;
+---
+
+<div class="container mx-auto items-center lg:max-w-6xl md:mas-w-3xl">
+  <nav class="mb-5 mt-5">
+    <div
+      class="container mx-auto bg-white shadow-5xl bg-linear-to-r/decreasing from-[#0c3b87] to-[#1e56a0] rounded-lg text-white"
+    >
+      <div
+        class="flex flex-col sm:flex-row justify-between text-center items-center p-6"
+      >
+        <div>
+          <h3 class="flex flex-row text-center gap-3 mb-3">
+            <Finger className="w-5 h-5" />
+            Su Codigo de Ususario:
+          </h3>
+          <div
+            class="py-2 px-4 font-bold text-xl bg-white/10 backdrop-invert backdrop-opacity-10 rounded-sm"
+          >
+            {id}
+          </div>
+        </div>
+        <!-- CopyBotones -->
+        <CopyButtom id={id} client:load />
+      </div>
+    </div>
+    <p
+      class="flex gap-2 m-3 items-center text-center text-gray-500 flex-col sm:flex-row"
+    >
+      <CircleInfo className="w-5 h-5  flex-shrink-0" />
+      Guarde este código en un lugar seguro. Lo necesitará para acceder a sus denuncias
+      en el futuro.
+    </p>
+  </nav>
+</div>
