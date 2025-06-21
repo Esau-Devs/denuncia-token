@@ -3,6 +3,8 @@ import Layout from "../../layouts/Layout.astro";
 import "../../styles/global.css";
 
 import { Finger, CircleInfo } from "../../icons/AllIcons";
+import CopyButtom from "../../components/CopyButtom.jsx";
+import OpcionButtom from "../../components/OpcionButtom.jsx";
 
 const { id } = Astro.params;
 export const prerender = false;
@@ -28,8 +30,17 @@ export const prerender = false;
               {id}
             </div>
           </div>
+          <CopyButtom id={id} client:load />
         </div>
       </div>
+      <p>
+        <CircleInfo className="w-5 h-5 flex-shrink-0" />
+        Guarde este codigo en un lugar seguro. lo necesitara para acceder a sus denuncias
+        en el futuro.
+      </p>
     </nav>
+    <div>
+      <OpcionButtom id={id} client:load />
+    </div>
   </div>
 </Layout>
