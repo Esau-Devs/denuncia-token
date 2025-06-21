@@ -2,11 +2,6 @@
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/global.css";
 import DenunciasPost from "../../components/DenunciasPost.astro";
-export const prerender = false;
-
-export async function getStaticPaths() {
-  return [];
-}
 
 const { id } = Astro.params;
 ---
