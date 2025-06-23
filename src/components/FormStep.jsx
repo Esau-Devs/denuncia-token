@@ -21,10 +21,8 @@ function FormularioDenuncia({ id }) {
     });
 
     if (errores[name]) {
-      if (
-        (name === "category" && value.trim() !== "") ||
-        (name === "description" && value.trim() !== "")
-      ) {
+      const campos = ["category","description","location"]
+      if (campos.includes(name) && value.trim() !== "") {
         setErrores((prev) => {
           const updated = { ...prev };
           delete updated[name];
@@ -36,8 +34,11 @@ function FormularioDenuncia({ id }) {
 
   const validarPasoActual = () => {
     const nuevosErrores = {};
-    if (step === 1 && !formData.category.trim()) {
+    if (step === 1 && !formData.category.trim() ) {
       nuevosErrores.category = "Debe seleccionar una categoría.";
+    }
+    if (step === 1 && !formData.location.trim()) {
+      nuevosErrores.location = "Debe seleccionar una ubicacion.";
     }
     if (step === 2 && !formData.description.trim()) {
       nuevosErrores.description = "Debe ingresar una descripción.";
@@ -149,7 +150,7 @@ function FormularioDenuncia({ id }) {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="location" className="block font-semibold mb-1">Ubicacion (opcional):</label>
+              <label htmlFor="location" className="block font-semibold mb-1">Ubicacion:</label>
               <input
                 type="text"
                 id="location"
@@ -159,6 +160,7 @@ function FormularioDenuncia({ id }) {
                 placeholder="Lugar donde ocurrieron los hechos"
                 className="w-full border border-gray-300 rounded px-3 py-2"
               />
+              {errores.location && <p className="text-red-500 text-sm mt-1">{errores.location}</p>}
             </div>
 
             <div className="flex justify-end">
