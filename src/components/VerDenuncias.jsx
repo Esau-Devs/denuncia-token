@@ -32,7 +32,7 @@ function VerDenuncias({id}) {
             <thead className="bg-gray-200 text-black font-semibold">
               <tr>
                 <th className="px-4 py-2">Fecha</th>
-                <th className="px-4 py-2">Categoria</th>
+                <th className="px-4 py-2">Categoría</th>
                 <th className="px-4 py-2">Evidencias</th>
                 <th className="px-4 py-2 text-center">Acciones</th>
               </tr>
@@ -82,13 +82,13 @@ function VerDenuncias({id}) {
                 <h4 className="text-lg font-bold mb-3 text-[#0c3b87]">
                   Detalle de la denuncia #{detalleActivo + 1}
                 </h4>
-                <p><strong>Categoria:</strong> {denuncias[detalleActivo].category}</p>
+                <p><strong>Categoría:</strong> {denuncias[detalleActivo].category}</p>
                 <p><strong>Fecha:</strong> {new Date(denuncias[detalleActivo].fecha).toLocaleString("es-SV", {
                   dateStyle: "medium",
                   timeStyle: "short",
                 })}</p>
-                <p><strong>Ubicacion:</strong> {denuncias[detalleActivo].location || "No proporcionada"}</p>
-                <p className="mt-2"><strong>Descripcion:</strong></p>
+                <p><strong>Ubicación:</strong> {denuncias[detalleActivo].location || "No proporcionada"}</p>
+                <p className="mt-2"><strong>Descripción:</strong></p>
                 <p className="bg-gray-100 p-2 rounded text-sm mt-1">{denuncias[detalleActivo].description}</p>
                 <p className="mt-2"><strong>Evidencias:</strong> {denuncias[detalleActivo].evidence?.length || 0} archivo(s)</p>
               </div>

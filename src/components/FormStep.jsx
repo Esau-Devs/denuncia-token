@@ -91,7 +91,7 @@ function FormularioDenuncia({ id }) {
       {/* Modal toast */}
       {modalVisible && (
         <div className="fixed right-5 top-24 bg-white border-l-4 border-green-600 shadow-lg rounded-md p-4 w-72 z-50 animate-fade-in-up">
-          <div className="text-green-700 font-bold mb-1">¡Exito!</div>
+          <div className="text-green-700 font-bold mb-1">¡&Eacute;xito!</div>
           <p className="text-sm text-gray-700">
             ¡Denuncia enviada y almacenada correctamente!
           </p>
@@ -138,19 +138,19 @@ function FormularioDenuncia({ id }) {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded px-3 py-2"
               >
-                <option value="">Seleccione una categoria</option>
-                <option value="corrupcion">Corrupcion</option>
+                <option value="">Seleccione una categoría</option>
+                <option value="corrupcion">Corrupción</option>
                 <option value="abuso">Abuso de Poder</option>
                 <option value="violencia">Violencia</option>
                 <option value="fraude">Fraude</option>
-                <option value="narcotrafico">Narcotrafico</option>
+                <option value="narcotrafico">Narcotráfico</option>
                 <option value="otro">Otro</option>
               </select>
               {errores.category && <p className="text-red-500 text-sm mt-1">{errores.category}</p>}
             </div>
 
             <div className="mb-4">
-              <label htmlFor="location" className="block font-semibold mb-1">Ubicacion:</label>
+              <label htmlFor="location" className="block font-semibold mb-1">Ubicación:</label>
               <input
                 type="text"
                 id="location"
@@ -175,7 +175,7 @@ function FormularioDenuncia({ id }) {
         {step === 2 && (
           <div>
             <div className="mb-4">
-              <label htmlFor="description" className="block font-semibold mb-1">Descripcion Detallada:</label>
+              <label htmlFor="description" className="block font-semibold mb-1">Descripción Detallada:</label>
               <textarea
                 id="description"
                 name="description"
@@ -220,7 +220,7 @@ function FormularioDenuncia({ id }) {
                   {(!formData.evidence || formData.evidence.length === 0) ? (
                     <>
                       <Upload className="w-8 h-8 text-gray-400 mb-1" />
-                      <span className="text-gray-600 text-sm">Seleccionar multiples archivos...</span>
+                      <span className="text-gray-600 text-sm">Seleccionar múltiples archivos...</span>
                     </>
                   ) : (
                     <span className="text-xs text-gray-600 flex flex-row gap-2 items-center text-center">
@@ -231,7 +231,7 @@ function FormularioDenuncia({ id }) {
                 </div>
               </div>
               <p className="text-xs text-gray-500 mt-2">
-                Formatos permitidos: imagenes, documentos, audio (máx. 10MB)
+                Formatos permitidos: imágenes, documentos, audio (máx. 10MB)
               </p>
             </div>
 
@@ -252,8 +252,8 @@ function FormularioDenuncia({ id }) {
             <div className="mb-6 bg-[#f7fafc] shadow-lg rounded-lg p-4 text-base/8">
               <h4 className="text-lg font-bold text-[#0c3b87]">Resumen de su denuncia</h4>
               <div className="text-sm space-y-3 mt-3 text-gray-700 ">
-                <div><strong>Categoria:</strong> {formData.category}</div>
-                <div><strong>Ubicacion:</strong> {formData.location || 'No proporcionada'}</div>
+                <div><strong>Categoriá:</strong> {formData.category}</div>
+                <div><strong>Ubicación:</strong> {formData.location || 'No proporcionada'}</div>
                 <div><strong>Descripción:</strong>
                   <p className='bg-white/10 backdrop-invert backdrop-opacity-10 rounded-sm p-3'>
                     {formData.description}
@@ -263,7 +263,7 @@ function FormularioDenuncia({ id }) {
               </div>
               <p className='bg-red-500/25 backdrop-invert backdrop-opacity-10 rounded-sm p-3 text-[#2d3748] mt-3 flex flex-col sm:flex-row gap-3 items-center'>
                 <Lock className='w-5 h-5 text-red-500 flex-shrink-0'/>
-                La informacion proporcionada es confidencial y sera tratada segun los protocolos de seguridad establecidos.
+                La información proporcionada es confidencial y sera tratada segun los protocolos de seguridad establecidos.
               </p>
             </div>
 
