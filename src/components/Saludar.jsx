@@ -11,19 +11,19 @@ const Saludar = () => {
       if (hora >= 6 && hora < 12) {
     return (
       <>
-        Buenos días <Sun className="inline w-7 h-7 text-yellow-500" />
+        Buenos días <Sun className="w-7 h-7 text-yellow-600 mx-3" />
       </>
     );
-  } else if (hora >= 12 && hora < 20) {
+  } else if (hora >= 12 && hora < 18) {
     return (
       <>
-        Buenas tardes  <Cloudsun className="inline w-7 h-7 text-orange-500 mx-3" />
+        Buenas tardes  <Cloudsun className=" w-7 h-7 text-orange-500 mx-3" />
       </>
     );
   } else {
     return (
       <>
-        Buenas noches <Moon className="inline w-7 h-7 text-blue-500" />
+        Buenas noches <Moon className="w-7 h-7 text-blue-500/29 mx-3" />
       </>
     );
   }
@@ -32,7 +32,7 @@ const Saludar = () => {
     setSaludo(obtenerSaludo());
   }, []);
 
-  return <h3 className='text-white font-semibold'>{saludo}</h3>;
+  return <span className='text-white font-semibold flex flex-row items-center text-center justify-center'>{saludo}</span>;
 };
 
 export default Saludar
