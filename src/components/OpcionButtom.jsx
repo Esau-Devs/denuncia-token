@@ -28,7 +28,7 @@ export default function Denuncias({id}) {
         <button
           onClick={() => cambiarVista("formulario")}
           className={`flex flex-row gap-2 cursor-pointer p-4 sm:w-1/2 w-full items-center justify-center ${
-            activo === "formulario" ? "border-b-4 border-[#0c3b87] bg-[#f7fafc]" : ""
+            activo === "formulario" ? "sm:border-b-4 sm:border-0 border-l-4 border-[#0c3b87] bg-[#f7fafc]" : ""
           }`}
         >
           <FileAlt className="w-5 h-5" />
@@ -37,7 +37,7 @@ export default function Denuncias({id}) {
         <button
           onClick={() => cambiarVista("ver")}
           className={`flex flex-row gap-2 cursor-pointer p-4 sm:w-1/2 w-full items-center justify-center ${
-            activo === "ver" ? "border-b-4 border-[#0c3b87] bg-[#f7fafc]" : ""
+            activo === "ver" ? "sm:border-b-4 sm:border-0 border-l-4 border-[#0c3b87] bg-[#f7fafc]" : ""
           }`}
         >
           <History className="w-5 h-5" />
