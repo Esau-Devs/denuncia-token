@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, Upload, FileAlt } from "../icons/AllIcons.js";
+import { Lock, Upload, FileAlt } from "@/icons/AllIcons.tsx";
 
 function FormularioDenuncia({ id }) {
   const [step, setStep] = useState(1);
@@ -21,7 +21,7 @@ function FormularioDenuncia({ id }) {
     });
 
     if (errores[name]) {
-      const campos = ["category","description","location"]
+      const campos = ["category", "description", "location"]
       if (campos.includes(name) && value.trim() !== "") {
         setErrores((prev) => {
           const updated = { ...prev };
@@ -34,7 +34,7 @@ function FormularioDenuncia({ id }) {
 
   const validarPasoActual = () => {
     const nuevosErrores = {};
-    if (step === 1 && !formData.category.trim() ) {
+    if (step === 1 && !formData.category.trim()) {
       nuevosErrores.category = "Debe seleccionar una categoría.";
     }
     if (step === 1 && !formData.location.trim()) {
@@ -90,12 +90,12 @@ function FormularioDenuncia({ id }) {
     <div className='mt-8 mb-8'>
       {/* Modal toast */}
       {modalVisible && (
-        <div className="fixed right-5 top-24 bg-white border-l-4 border-green-600 shadow-lg rounded-md p-4 w-72 z-50 animate-fade-in-up">
+        <article className="fixed right-5 top-24 bg-white border-l-4 border-green-600 shadow-lg rounded-md p-4 w-72 z-50 animate-fade-in-up">
           <div className="text-green-700 font-bold mb-1">¡&Eacute;xito!</div>
           <p className="text-sm text-gray-700">
             ¡Denuncia enviada y almacenada correctamente!
           </p>
-        </div>
+        </article>
       )}
 
       <nav className="p-6 bg-[#f7fafc]">
@@ -114,11 +114,10 @@ function FormularioDenuncia({ id }) {
                 {index < 3 && (
                   <div className={`absolute top-2.5 left-1/2 w-full h-0.5 z-0 ${isCompleted ? 'bg-green-500' : 'bg-gray-200'}`} />
                 )}
-                <div className={`relative z-10 w-5 h-5 rounded-full border-4 transition-all duration-300 ${
-                  isCompleted ? 'border-green-500 bg-white' :
+                <div className={`relative z-10 w-5 h-5 rounded-full border-4 transition-all duration-300 ${isCompleted ? 'border-green-500 bg-white' :
                   isCurrent ? 'border-[#0c3b87] bg-[#0c3b87]' :
-                  'border-gray-300 bg-white'
-                }`} />
+                    'border-gray-300 bg-white'
+                  }`} />
                 <span className="mt-2 text-sm font-medium text-[#0c3b87]">{label}</span>
               </div>
             );
@@ -127,7 +126,7 @@ function FormularioDenuncia({ id }) {
 
         {/* Paso 1 */}
         {step === 1 && (
-          <div>
+          <article>
             <div className="mb-4">
               <label htmlFor="category" className="block font-semibold mb-1">Categoría:</label>
               <select
@@ -168,12 +167,12 @@ function FormularioDenuncia({ id }) {
                 Siguiente
               </button>
             </div>
-          </div>
+          </article>
         )}
 
         {/* Paso 2 */}
         {step === 2 && (
-          <div>
+          <article>
             <div className="mb-4">
               <label htmlFor="description" className="block font-semibold mb-1">Descripción Detallada:</label>
               <textarea
@@ -197,12 +196,12 @@ function FormularioDenuncia({ id }) {
                 Siguiente
               </button>
             </div>
-          </div>
+          </article>
         )}
 
         {/* Paso 3 */}
         {step === 3 && (
-          <div>
+          <article>
             <div className="mb-6">
               <label htmlFor="evidence" className="block text-sm font-medium text-gray-800 mb-2">
                 Evidencia <span className="text-gray-500">(opcional)</span>
@@ -243,12 +242,12 @@ function FormularioDenuncia({ id }) {
                 Revisar
               </button>
             </div>
-          </div>
+          </article>
         )}
 
         {/* Paso 4 */}
         {step === 4 && (
-          <div>
+          <article>
             <div className="mb-6 bg-[#f7fafc] shadow-lg rounded-lg p-4 text-base/8">
               <h4 className="text-lg font-bold text-[#0c3b87]">Resumen de su denuncia</h4>
               <div className="text-sm space-y-3 mt-3 text-gray-700 ">
@@ -262,7 +261,7 @@ function FormularioDenuncia({ id }) {
                 <div><strong>Evidencias:</strong> {formData.evidence?.length ? `${formData.evidence.length} archivo(s)` : 'No adjuntada'}</div>
               </div>
               <p className='bg-red-500/25 backdrop-invert backdrop-opacity-10 rounded-sm p-3 text-[#2d3748] mt-3 flex flex-col sm:flex-row gap-3 items-center'>
-                <Lock className='w-5 h-5 text-red-500 flex-shrink-0'/>
+                <Lock className='w-5 h-5 text-red-500 flex-shrink-0' />
                 La información proporcionada es confidencial y sera tratada segun los protocolos de seguridad establecidos.
               </p>
             </div>
@@ -275,7 +274,7 @@ function FormularioDenuncia({ id }) {
                 Enviar Denuncia
               </button>
             </div>
-          </div>
+          </article>
         )}
       </form>
     </div>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {  Copy } from "../icons/AllIcons.jsx";
+import { Copy } from "@/icons/AllIcons.tsx";
 
 export default function CopiarIdButton({ id }) {
   const [copiado, setCopiado] = useState(false);

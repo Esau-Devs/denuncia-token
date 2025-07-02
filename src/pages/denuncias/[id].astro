@@ -1,18 +1,18 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import "../../styles/global.css";
+import Layout from "@/layouts/Layout.astro";
+import "@/styles/global.css";
 
-import { Finger, CircleInfo } from "../../icons/AllIcons";
-import CopyButtom from "../../components/CopyButtom.jsx";
-import OpcionButtom from "../../components/OpcionButtom.jsx";
+import { Finger, CircleInfo } from "@/icons/AllIcons.tsx";
+import CopyButtom from "@/components/atoms/CopyButtom.jsx";
+import OpcionButtom from "@/components/moleculas/OpcionButtom.jsx";
 
 const { id } = Astro.params;
 export const prerender = false;
 ---
 
 <Layout>
-  <div class="container mx-auto items-center lg:max-w-6xl md:max-w-3xl">
-    <nav class="mb-5 mt-8">
+  <section class="container mx-auto items-center lg:max-w-6xl md:max-w-3xl">
+    <div class="mb-5 mt-8">
       <div
         class="container mx-auto bg-white shadow-5xl bg-linear-to-r/decreasing from-[#0c3b87] to-[#1e56a0] rounded-lg text-white"
       >
@@ -25,7 +25,7 @@ export const prerender = false;
               Su Codigo de Usuario:
             </h3>
             <div
-              class="py-2 px-4 font-bold text=xl bg-white/10 backdrop-invert backdrop-opacity-10 rounded-sm"
+              class="py-2 px-4 font-bold text-xl bg-white/10 backdrop-invert backdrop-opacity-10 rounded-sm"
             >
               {id}
             </div>
@@ -40,9 +40,9 @@ export const prerender = false;
         Guarde este codigo en un lugar seguro. lo necesitara para acceder a sus denuncias
         en el futuro.
       </p>
-    </nav>
+    </div>
     <div>
       <OpcionButtom id={id} client:load />
     </div>
-  </div>
+  </section>
 </Layout>
