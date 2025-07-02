@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { FolderOpen, Eyes } from "../icons/AllIcons";
+import { FolderOpen, Eyes } from "@/icons/AllIcons";
 
 
-function VerDenuncias({id}) {
+function VerDenuncias({ id }) {
   const [denuncias, setDenuncias] = useState([]);
   const [detalleActivo, setDetalleActivo] = useState(null);
 
@@ -27,7 +27,7 @@ function VerDenuncias({id}) {
           <span>No ha realizado ninguna denuncia todavia.</span>
         </div>
       ) : (
-        <div className="p-6">
+        <section className="p-6">
           <table className="min-w-full text-sm text-left border border-gray-200 rounded-lg overflow-hidden">
             <thead className="bg-gray-200 text-black font-semibold">
               <tr>
@@ -46,9 +46,9 @@ function VerDenuncias({id}) {
                   <td className="px-4 py-2">
                     {denuncia.fecha
                       ? new Date(denuncia.fecha).toLocaleString("es-SV", {
-                          dateStyle: "medium",
-                          timeStyle: "short",
-                        })
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })
                       : "Fecha no disponible"}
                   </td>
                   <td className="px-4 py-2 capitalize">{denuncia.category}</td>
@@ -94,7 +94,7 @@ function VerDenuncias({id}) {
               </div>
             </div>
           )}
-        </div>
+        </section>
       )}
     </div>
   );

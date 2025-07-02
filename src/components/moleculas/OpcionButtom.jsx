@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { FileAlt, History } from "../icons/AllIcons";
-import FormStep from "./FormStep";
-import VerDenuncias from "./VerDenuncias";
+import { FileAlt, History } from "@/icons/AllIcons.tsx";
+import FormStep from "@/components/moleculas/FormStep";
+import VerDenuncias from "@/components/organisms/VerDenuncias";
 
-export default function Denuncias({id}) {
+export default function Denuncias({ id }) {
   const [activo, setActivo] = useState(null);
 
   useEffect(() => {
@@ -27,18 +27,16 @@ export default function Denuncias({id}) {
       <div className="flex flex-col items-center sm:flex-row text-[#0c3b87] bg-white shadow-md rounded-lg font-bold mb-6">
         <button
           onClick={() => cambiarVista("formulario")}
-          className={`flex flex-row gap-2 cursor-pointer p-4 sm:w-1/2 w-full items-center justify-center ${
-            activo === "formulario" ? "sm:border-b-4 sm:border-0 border-l-4 border-[#0c3b87] bg-[#f7fafc]" : ""
-          }`}
+          className={`flex flex-row gap-2 cursor-pointer p-4 sm:w-1/2 w-full items-center justify-center ${activo === "formulario" ? "sm:border-b-4 sm:border-0 border-l-4 border-[#0c3b87] bg-[#f7fafc]" : ""
+            }`}
         >
           <FileAlt className="w-5 h-5" />
           Nuevas Denuncias
         </button>
         <button
           onClick={() => cambiarVista("ver")}
-          className={`flex flex-row gap-2 cursor-pointer p-4 sm:w-1/2 w-full items-center justify-center ${
-            activo === "ver" ? "sm:border-b-4 sm:border-0 border-l-4 border-[#0c3b87] bg-[#f7fafc]" : ""
-          }`}
+          className={`flex flex-row gap-2 cursor-pointer p-4 sm:w-1/2 w-full items-center justify-center ${activo === "ver" ? "sm:border-b-4 sm:border-0 border-l-4 border-[#0c3b87] bg-[#f7fafc]" : ""
+            }`}
         >
           <History className="w-5 h-5" />
           Mis Denuncias
@@ -46,8 +44,8 @@ export default function Denuncias({id}) {
       </div>
 
       <div className="bg-white rounded-lg shadow-md text-[#0c3b87]">
-        {activo === "formulario" && <FormStep id={id}/>}
-        {activo === "ver" && <VerDenuncias id={id}  client:load/>}
+        {activo === "formulario" && <FormStep id={id} />}
+        {activo === "ver" && <VerDenuncias id={id} client:load />}
       </div>
     </div>
   );
