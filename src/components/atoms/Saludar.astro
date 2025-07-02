@@ -1,0 +1,27 @@
+---
+import { Sun, Moon, Cloudsun } from "@/icons/AllIcons.tsx";
+
+const hora = new Date().getHours();
+let saludo = "";
+let iconoTipo = "";
+
+if (hora >= 6 && hora < 12) {
+  saludo = "Buenos días";
+  iconoTipo = "sun";
+} else if (hora >= 12 && hora < 18) {
+  saludo = "Buenas tardes";
+  iconoTipo = "cloudsun";
+} else {
+  saludo = "Buenas noches";
+  iconoTipo = "moon";
+}
+---
+
+<span
+  class="text-white font-semibold flex flex-row items-center justify-center"
+>
+  {saludo}
+  {iconoTipo === "sun" && <Sun />}
+  {iconoTipo === "cloudsun" && <Cloudsun />}
+  {iconoTipo === "moon" && <Moon />}
+</span>
