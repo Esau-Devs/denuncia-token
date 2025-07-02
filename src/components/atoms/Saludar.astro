@@ -1,27 +1,30 @@
 ---
 import { Sun, Moon, Cloudsun } from "@/icons/AllIcons.tsx";
-
-const hora = new Date().getHours();
-let saludo = "";
-let iconoTipo = "";
-
-if (hora >= 6 && hora < 12) {
-  saludo = "Buenos días";
-  iconoTipo = "sun";
-} else if (hora >= 12 && hora < 18) {
-  saludo = "Buenas tardes";
-  iconoTipo = "cloudsun";
-} else {
-  saludo = "Buenas noches";
-  iconoTipo = "moon";
-}
 ---
 
 <span
   class="text-white font-semibold flex flex-row items-center justify-center"
 >
-  {saludo}
-  {iconoTipo === "sun" && <Sun />}
-  {iconoTipo === "cloudsun" && <Cloudsun />}
-  {iconoTipo === "moon" && <Moon />}
+  <span id="saludo-dia" style="display: none;">Buenos días <Sun /></span>
+  <span id="saludo-tarde" style="display: none;"
+    >Buenas tardes <Cloudsun /></span
+  >
+  <span id="saludo-noche" style="display: none;">Buenas noches <Moon /></span>
 </span>
+
+<script is:inline>
+  (function () {
+    const hora = new Date().getHours();
+    let elementoId = "";
+
+    if (hora >= 6 && hora < 12) {
+      elementoId = "saludo-dia";
+    } else if (hora >= 12 && hora < 18) {
+      elementoId = "saludo-tarde";
+    } else {
+      elementoId = "saludo-noche";
+    }
+
+    document.getElementById(elementoId).style.display = "flex";
+  })();
+</script>
