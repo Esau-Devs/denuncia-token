@@ -1,0 +1,4 @@
+Contact: mailto:esau.run@gmail.com
+Expires: 2025-12-31T23:59:00Z
+Preferred-Languages: es, en
+Policy: https://denuncia-token.vercel.app/privacidad
