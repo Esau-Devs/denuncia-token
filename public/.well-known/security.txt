@@ -1,4 +1,23 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
 Contact: mailto:esau.run@gmail.com
 Expires: 2025-12-31T23:59:00Z
 Preferred-Languages: es, en
 Policy: https://denuncia-token.vercel.app/privacidad
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE9WxTFrveQt1rM8EqbfbT/n1J8EgFAmh3IHYACgkQbfbT/n1J
+8EieIQ/+PoSeTrBj/xXfhga5PHTUa2CXjZRMbhemJhlvQM9w2I5Y3dy2NlqqanDz
+I+79iZu1HIqvC9mRi9cdx/oY0zxFxD5Qg9pewMTQbH1EAgpKUl37OMhrQQzQbGsQ
+JFnOVdz1/NXJf77ziBYcmuQQDkMm42WJNCO5y3UCW2Bgt4UgpTAF3SQoOcJtCrsL
+jQfoVJJu2Z6mfNL1ts5/PUFw7iVmW1s817bRYH/hPDRlzkx5y1AYGOqL6ZoaEC7h
+EZPJCATIHKFUPFJbXPRCVthhqOUrgzyQOWXzdJshJMLDxU0PospAfLTqol3E6LSn
+f7qaklwbkcyJqh9oJKND/H7WLk7P64VKNsrSzQtYR7cXHQHJs2vNWx7x4LTaz1DG
+MM0rnZQTA4zkOYDeNMHdtOhXTsAETL9gEqbu8ruqWFhNutWqjkUr1LpoOqgTc+Om
+z601FoI5l7ngWxKlFTufnSlMvqFXfeeUyb6QNf7goCQsGPtgFrEbxPf1nrXCSAJJ
+8GGNr1v+8ACYzAmCBnlwKl8eVI0zfDZyiXgqWQfkHfHb3PCkDquCJz4cPtEHvE5u
+TTjBcyYTbYSnIWkYmSyQS4G6nwKjB/72zQn8zvhnf4q4g3KxYn1185vIbriS2Rzj
+fLqPkp1J7oMZmgOhdOfPEK6wGBF/u1k/ZtDEQ+WEuUaKZ5+uuC0=
+=93nK
+-----END PGP SIGNATURE-----
