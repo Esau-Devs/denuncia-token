@@ -63,12 +63,12 @@ import "@/styles/global.css";
   <body class="flex flex-col bg-[#f8fafc]">
     <header
       class="bg-gradient-to-r from-[#1e293b] via-[#2a3b5d] to-[#0c3b87]
-      p-6 flex items-center"
+      md:p-4 xl:p-6 flex items-center"
     >
       <Nav />
     </header>
     <main
-      class="container mx-auto p-2 md:p-10 lg:p-20 flex-grow mt-8 mb-8 sm:mt-0 sm:mb-0"
+      class="lg:container mx-auto p-2 md:p-10 lg:p-20 flex-grow mt-8 mb-8 sm:mt-0 sm:mb-0"
     >
       <slot />
     </main>
