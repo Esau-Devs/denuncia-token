@@ -1,6 +1,7 @@
 ---
 import Nav from "@/components/organisms/Nav.astro";
 import Footer from "@/components/atoms/Footer.astro";
+import Login from "@/components/moleculas/Login.jsx";
 import "@/styles/global.css";
 ---
 
@@ -53,7 +54,6 @@ import "@/styles/global.css";
       name="twitter:image"
       content="https://denuncia-token.vercel.app/og_image.png"
     />
-
     <!-- Autor (opcional) -->
     <meta name="author" content="Nombre del desarrollador o institución" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -61,22 +61,7 @@ import "@/styles/global.css";
     <title>Plataforma de Denuncias FGR SV | Seguridad y Confidencialidad</title>
   </head>
   <body class="flex flex-col bg-[#f8fafc]">
-    <header
-      class="bg-gradient-to-r from-[#1e293b] via-[#2a3b5d] to-[#0c3b87]
-      md:p-4 xl:p-6 flex items-center"
-    >
-      <Nav />
-    </header>
-    <main
-      class="lg:container mx-auto p-2 md:p-10 lg:p-20 flex-grow mt-8 mb-8 sm:mt-0 sm:mb-0"
-    >
-      <slot />
-    </main>
-    <footer
-      class="bg-gradient-to-r from-[#0c3b87] via-[#1e293b] to-[#2a3b5d] text-white py-6 px-20"
-    >
-      <Footer />
-    </footer>
+    <slot />
   </body>
 </html>
 

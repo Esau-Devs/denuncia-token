@@ -1,0 +1,11 @@
+---
+import "@/styles/global.css";
+
+import Layout from "@/layouts/Layout.astro";
+import RegistrarUsuario from "@/components/moleculas/RegistrarUsuario.jsx";
+---
+
+<Layout title="Registro de cuenta">
+    {/* 🔑 2. Monta el componente de React como una Isla */}
+    <RegistrarUsuario client:only="react" />
+</Layout>
