@@ -116,7 +116,7 @@ export default function Login() {
             } else {
 
                 const data = await response.json();
-
+                console.log('Respuesta de error del servidor:', data);
                 if (response.status === 401 || data.detail === 'Credenciales inválidas') {
                     setIsMessageAuthenticated(true);
 
@@ -146,29 +146,25 @@ export default function Login() {
     return (
 
 
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-8">
             {isMessageAuthenticated && (
-                <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50 bg-opacity-50 backdrop-blur-xs inset-shadow-sm border border-gray-200">
-                    {/* Modal */}
-                    <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
-                        {/* Icono de alerta */}
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
                         <div className="flex justify-center mb-4">
                             <div className="bg-red-100 rounded-full p-3">
-                                <AlertTriangle className="w-12 h-12 text-red-600" />
+                                <AlertTriangle className="w-8 h-8 sm:w-12 sm:h-12 text-red-600" />
                             </div>
                         </div>
 
-                        {/* Mensaje */}
                         <div className="text-center mb-6">
-                            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                            <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
                                 Error de autenticación
                             </h2>
-                            <p className="text-gray-600">
+                            <p className="text-sm sm:text-base text-gray-600">
                                 Usuario o contraseña incorrectos
                             </p>
                         </div>
 
-                        {/* Botón */}
                         <button
                             onClick={() => setIsMessageAuthenticated(false)}
                             className="w-full bg-[#0c3b87] text-white py-3 px-4 rounded-lg font-medium hover:bg-[#0a2f6b] transition-colors duration-200 cursor-pointer"
@@ -179,26 +175,33 @@ export default function Login() {
                 </div>
             )}
 
-
-            <div className="w-full max-w-md space-y-8">
+            <div className="w-full max-w-md space-y-6 sm:space-y-8">
                 {/* Header */}
-                <div className="text-center space-y-4">
+                <div className="text-center space-y-3 sm:space-y-4">
                     <div className="flex justify-center">
-                        <div className="bg-[#0c3b87] rounded-full p-4 shadow-lg">
-                            <ShieldAlt className="w-8 h-8 text-white" />
+                        <div className="bg-[#0c3b87] rounded-full p-3 sm:p-4 shadow-lg">
+                            <ShieldAlt className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                         </div>
                     </div>
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Denuncias Ciudadanas</h1>
-                        <p className="text-gray-600 mt-2">Plataforma oficial para reportar incidencias ciudadanas</p>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                            Denuncias Ciudadanas
+                        </h1>
+                        <p className="text-sm sm:text-base text-gray-600 mt-2 px-4 text-balanced">
+                            Plataforma oficial para reportar incidencias ciudadanas
+                        </p>
                     </div>
                 </div>
 
                 {/* Login Form */}
-                <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-6">
-                    <div className="space-y-1 mb-6">
-                        <h2 className="text-2xl font-semibold text-center text-gray-900">Iniciar Sesión</h2>
-                        <p className="text-center text-gray-600">Ingresa tu DUI y contraseña para acceder</p>
+                <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-5 sm:p-6">
+                    <div className="space-y-1 mb-5 sm:mb-6">
+                        <h2 className="text-xl sm:text-2xl font-semibold text-center text-gray-900">
+                            Iniciar Sesión
+                        </h2>
+                        <p className="text-sm sm:text-base text-center text-gray-600 px-2">
+                            Ingresa tu DUI y contraseña para acceder
+                        </p>
                     </div>
 
                     <div className="space-y-4">
@@ -215,14 +218,14 @@ export default function Login() {
                                 value={formData.dui}
                                 onChange={handleInputChange}
                                 maxLength="10"
-                                className={`w-full h-12 px-4 rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#0c3b87] focus:border-transparent ${errors.dui
+                                className={`w-full h-11 sm:h-12 px-4 text-sm sm:text-base rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#0c3b87] focus:border-transparent ${errors.dui
                                     ? 'border-red-300 bg-red-50'
                                     : 'border-gray-200 hover:border-gray-300'
                                     }`}
                                 required
                             />
                             {errors.dui && (
-                                <div className="flex items-center gap-1 text-red-600 text-sm">
+                                <div className="flex items-center gap-1 text-red-600 text-xs sm:text-sm">
                                     <span>{errors.dui}</span>
                                 </div>
                             )}
@@ -241,7 +244,7 @@ export default function Login() {
                                     placeholder="••••••••"
                                     value={formData.password}
                                     onChange={handleInputChange}
-                                    className={`w-full h-12 px-4 pr-12 rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#0c3b87] focus:border-transparent ${errors.password
+                                    className={`w-full h-11 sm:h-12 px-4 pr-12 text-sm sm:text-base rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#0c3b87] focus:border-transparent ${errors.password
                                         ? 'border-red-300 bg-red-50'
                                         : 'border-gray-200 hover:border-gray-300'
                                         }`}
@@ -252,11 +255,15 @@ export default function Login() {
                                     onClick={() => setShowPassword(!showPassword)}
                                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
                                 >
-                                    {showPassword ? <Eyes className="w-5 h-5" /> : <EyesSlash className="w-5 h-5" />}
+                                    {showPassword ? (
+                                        <Eyes className="w-5 h-5" />
+                                    ) : (
+                                        <EyesSlash className="w-5 h-5" />
+                                    )}
                                 </button>
                             </div>
                             {errors.password && (
-                                <div className="flex items-center gap-1 text-red-600 text-sm">
+                                <div className="flex items-center gap-1 text-red-600 text-xs sm:text-sm">
                                     <span>{errors.password}</span>
                                 </div>
                             )}
@@ -267,12 +274,12 @@ export default function Login() {
                             type="button"
                             onClick={handleSubmit}
                             disabled={isLoading}
-                            className="w-full h-12 bg-[#0c3b87] hover:bg-[#1e56a0] disabled:bg-blue-400 disabled:cursor-not-allowed text-white text-lg font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg cursor-pointer flex items-center justify-center"
+                            className="w-full h-11 sm:h-12 bg-[#0c3b87] hover:bg-[#1e56a0] disabled:bg-blue-400 disabled:cursor-not-allowed text-white text-base sm:text-lg font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg cursor-pointer flex items-center justify-center"
                         >
                             {isLoading ? (
                                 <div className="flex items-center justify-center gap-2">
                                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                    Iniciando sesión...
+                                    <span className="text-sm sm:text-base">Iniciando sesión...</span>
                                 </div>
                             ) : (
                                 'Iniciar Sesión'
@@ -280,8 +287,8 @@ export default function Login() {
                         </button>
                     </div>
 
-                    <div className="mt-6 text-center">
-                        <p className="text-sm text-gray-600">
+                    <div className="mt-5 sm:mt-6 text-center">
+                        <p className="text-xs sm:text-sm text-gray-600">
                             ¿No tienes cuenta?{" "}
                             <a
                                 className="text-[#0c3b87] hover:text-[#1e56a0] hover:underline font-medium transition-colors cursor-pointer"
@@ -290,19 +297,11 @@ export default function Login() {
                                 Registrarse
                             </a>
                         </p>
-
-                        {/* <button
-                            type="button"
-                            className="text-sm text-[#0c3b87] hover:text-[#1e56a0] hover:underline mt-2 transition-colors cursor-pointer"
-                            onClick={() => alert('Funcionalidad de recuperación próximamente')}
-                        >
-                            ¿Olvidaste tu contraseña?
-                        </button> */}
                     </div>
                 </div>
 
                 {/* Footer */}
-                <div className="text-center text-xs text-gray-500">
+                <div className="text-center text-xs text-gray-500 px-4">
                     <div className="flex items-center justify-center gap-2 mb-2">
                         <span>Servicio ciudadano oficial</span>
                     </div>

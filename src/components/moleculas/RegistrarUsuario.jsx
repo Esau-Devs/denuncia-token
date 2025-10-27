@@ -340,9 +340,9 @@ const RegistrarUsuario = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-purple-50 via-white to-blue-50">
+        <div className="container mx-auto flex items-center justify-center min-h-screen p-4">
             {isRegistered && (
-                <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50 bg-opacity-50 backdrop-blur-xs inset-shadow-sm border border-gray-200">
+                <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50 bg-opacity-50 backdrop-blur-xs inset-shadow-sm border border-gray-200 p-4">
                     {/* Modal */}
                     <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
                         {/* Icono de alerta */}
@@ -382,7 +382,7 @@ const RegistrarUsuario = () => {
                             <ShieldAlt className="w-8 h-8 text-white" />
                         </div>
                     </div>
-                    <div>
+                    <div className=" wrap-break-word">
                         <h1 className="text-3xl font-bold text-gray-900">Registrarse</h1>
                         <p className="text-gray-600 mt-2">Crear una nueva cuenta en la plataforma</p>
                     </div>
@@ -424,7 +424,7 @@ const RegistrarUsuario = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowDuiCamera(true)}
-                                        className={`w-full flex flex-col items-center justify-center h-32 border-2 border-dashed rounded-lg transition-all duration-200 hover:bg-blue-50 ${errors.duiImage ? 'border-red-300 bg-red-50' : 'border-blue-300 bg-blue-50'
+                                        className={`w-full flex flex-col items-center justify-center h-32 border-2 border-dashed rounded-lg transition-all duration-200 hover:bg-blue-50 cursor-pointer ${errors.duiImage ? 'border-red-300 bg-red-50' : 'border-blue-300 bg-blue-50'
                                             }`}
                                     >
                                         <Camera className="w-10 h-10 text-[#0c3b87] mb-2" />
@@ -482,11 +482,11 @@ const RegistrarUsuario = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowFaceCamera(true)}
-                                        className={`w-full flex flex-col items-center justify-center h-32 border-2 border-dashed rounded-lg transition-all duration-200 hover:bg-purple-50 ${errors.faceImage ? 'border-red-300 bg-red-50' : 'border-purple-300 bg-purple-50'
+                                        className={`w-full flex flex-col items-center justify-center h-32 border-2 border-dashed rounded-lg transition-all duration-200 hover:bg-blue-50 cursor-pointer ${errors.faceImage ? 'border-red-300 bg-red-50' : 'border-blue-300 bg-blue-50'
                                             }`}
                                     >
-                                        <Camera className="w-10 h-10 text-purple-600 mb-2" />
-                                        <p className="text-sm font-medium text-purple-600">Tomar Foto del Rostro</p>
+                                        <Camera className="w-10 h-10 text-[#0c3b87] mb-2" />
+                                        <p className="text-sm font-medium text-[#0c3b87]">Tomar Foto del Rostro</p>
                                         <p className="text-xs text-gray-500 mt-1">🤳 Usa tu cámara</p>
                                     </button>
 
