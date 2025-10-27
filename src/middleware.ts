@@ -48,8 +48,13 @@ const verifySession = async (token: string | undefined): Promise<boolean> => {
         });
 
 
-
+        if (!response.ok) {
+            console.error("Error en la verificación de sesión:", response.statusText);
+            return false;
+        }
         return response.ok;
+
+
 
     } catch (error) {
         // Ignoramos errores de red/conexión.
