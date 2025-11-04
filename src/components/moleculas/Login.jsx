@@ -135,7 +135,7 @@ export default function Login() {
         } catch (error) {
             console.error('Error en login:', error);
 
-            setMessage('Error de conexión o credenciales inválidas. Por favor, intenta nuevamente.', 'error');
+
 
         } finally {
             setIsLoading(false);
@@ -148,7 +148,7 @@ export default function Login() {
 
         <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-8">
             {isMessageAuthenticated && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 bg-opacity-50 backdrop-blur-xs inset-shadow-sm border border-gray-200 p-4">
                     <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
                         <div className="flex justify-center mb-4">
                             <div className="bg-red-100 rounded-full p-3">
