@@ -1,46 +1,123 @@
 import React, { useState } from 'react';
-import { Lock, FileAlt, XS, Circule, Upload } from "@/icons/AllIcons.tsx";
+import { Lock, FileAlt, XS, Circule, Upload, X } from "@/icons/AllIcons.tsx";
 
 function FormularioDenuncia({ isOpen, onClose }) {
   const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(false); // ✅ nuevo estado de carga
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     category: '',
     location: '',
     description: '',
-    evidence: null,
+    evidence: [], // Array de archivos
   });
 
   const [errores, setErrores] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
 
+  // ============================================
+  // Validación de archivos
+  // ============================================
+  const validateFile = (file) => {
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+    const ALLOWED_TYPES = [
+      'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp',
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'audio/mpeg', 'audio/wav', 'audio/ogg'
+    ];
+
+    if (file.size > MAX_SIZE) {
+      return { valid: false, error: `${file.name} excede el tamaño máximo de 10MB` };
+    }
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return { valid: false, error: `${file.name} no es un tipo de archivo permitido` };
+    }
+
+    return { valid: true };
+  };
+
+  // ============================================
+  // Manejo de cambios del formulario
+  // ============================================
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files ? Array.from(files) : value,
-    });
 
-    if (errores[name]) {
-      const campos = ["category", "description", "location"]
-      if (campos.includes(name) && value.trim() !== "") {
-        setErrores((prev) => {
-          const updated = { ...prev };
-          delete updated[name];
-          return updated;
-        });
+    if (name === 'evidence' && files) {
+      const filesArray = Array.from(files);
+
+      // Limitar a 4 archivos
+      if (filesArray.length > 4) {
+        alert('⚠️ Solo puedes subir un máximo de 4 archivos');
+        return;
+      }
+
+      // Validar cada archivo
+      const errors = [];
+      const validFiles = [];
+
+      filesArray.forEach(file => {
+        const validation = validateFile(file);
+        if (validation.valid) {
+          validFiles.push(file);
+        } else {
+          errors.push(validation.error);
+        }
+      });
+
+      // Mostrar errores si los hay
+      if (errors.length > 0) {
+        alert('❌ Errores en los archivos:\n' + errors.join('\n'));
+      }
+
+      // Guardar solo archivos válidos
+      if (validFiles.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          evidence: validFiles
+        }));
+        console.log(`✅ ${validFiles.length} archivo(s) válido(s) seleccionado(s)`);
+      }
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+
+      // Limpiar errores
+      if (errores[name]) {
+        const campos = ["category", "description", "location"];
+        if (campos.includes(name) && value.trim() !== "") {
+          setErrores((prev) => {
+            const updated = { ...prev };
+            delete updated[name];
+            return updated;
+          });
+        }
       }
     }
   };
 
+  // Función para remover un archivo específico
+  const removeFile = (indexToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      evidence: prev.evidence.filter((_, index) => index !== indexToRemove)
+    }));
+  };
+
+  // ============================================
+  // Validación de pasos
+  // ============================================
   const validarPasoActual = () => {
     const nuevosErrores = {};
     if (step === 1 && !formData.category.trim()) {
       nuevosErrores.category = "Debe seleccionar una categoría.";
     }
     if (step === 1 && !formData.location.trim()) {
-      nuevosErrores.location = "Debe seleccionar una ubicacion.";
+      nuevosErrores.location = "Debe seleccionar una ubicación.";
     }
     if (step === 2 && !formData.description.trim()) {
       nuevosErrores.description = "Debe ingresar una descripción.";
@@ -57,51 +134,91 @@ function FormularioDenuncia({ isOpen, onClose }) {
 
   const prevStep = () => setStep((prev) => prev - 1);
 
+  // ============================================
+  // Envío del formulario (TODO EN UNO)
+  // ============================================
   const handleSubmit = async () => {
     try {
-      setLoading(true); // ✅ iniciar carga
+      setLoading(true);
 
-      const nuevaDenuncia = {
-        category: formData.category,
-        location: formData.location,
-        description: formData.description,
-        evidence: formData.evidence,
-      };
+      // Crear FormData para enviar archivos + datos
+      const formDataToSend = new FormData();
 
-      const token = localStorage.getItem('token');
+      // Agregar datos de la denuncia
+      formDataToSend.append('category', formData.category);
+      formDataToSend.append('location', formData.location);
+      formDataToSend.append('description', formData.description);
 
+      // Agregar archivos (si hay)
+      if (formData.evidence && formData.evidence.length > 0) {
+        formData.evidence.forEach((file, index) => {
+          formDataToSend.append('files', file);
+        });
+      }
+
+      console.log("=".repeat(60));
+      console.log("🔍 ENVIANDO DENUNCIA:");
+      console.log("Category:", formData.category);
+      console.log("Location:", formData.location);
+      console.log("Description:", formData.description);
+      console.log("Files:", formData.evidence.length, "archivo(s)");
+      console.log("=".repeat(60));
+
+      // Enviar al backend
       const response = await fetch('http://localhost:8000/denuncias/crear', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(nuevaDenuncia),
+        credentials: 'include',
+        body: formDataToSend, // FormData, NO JSON
+        // NO incluir Content-Type, el navegador lo configura automáticamente con boundary
       });
 
-      if (!response.ok) throw new Error('Error al enviar denuncia');
+      const data = await response.json();
 
-      console.log('Denuncia guardada correctamente');
+      console.log("📥 Respuesta del servidor:", data);
+      console.log("📥 Status:", response.status);
+
+      if (!response.ok) {
+        console.error('❌ Error del servidor:', data);
+        throw new Error(data.detail || 'Error desconocido');
+      }
+
+      console.log('✅ Denuncia guardada correctamente:', data);
+
+      // Mostrar modal de éxito
       setModalVisible(true);
 
+      // Resetear formulario
       setFormData({
         category: '',
         location: '',
         description: '',
         evidence: [],
       });
-
       setStep(1);
-      setLoading(false); // ✅ detener carga
+
+      // Cerrar modal después de 2 segundos
+      setTimeout(() => {
+        setModalVisible(false);
+        onClose();
+      }, 2000);
+
     } catch (error) {
-      console.error("Error al guardar la denuncia:", error);
-      setLoading(false); // detener carga en caso de error
+      console.error("❌ Error completo:", error);
+      alert('❌ Error: ' + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleClose = () => {
     setStep(1);
     setErrores({});
+    setFormData({
+      category: '',
+      location: '',
+      description: '',
+      evidence: [],
+    });
     onClose();
   };
 
@@ -124,6 +241,7 @@ function FormularioDenuncia({ isOpen, onClose }) {
           <p className="text-blue-900 font-medium">Enviando denuncia...</p>
         </div>
       )}
+
       <div className="bg-white rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
         <div className="p-6 bg-gray-50 border-b flex justify-between items-center">
           <h3 className="font-bold text-xl">Formulario de denuncias</h3>
@@ -213,13 +331,13 @@ function FormularioDenuncia({ isOpen, onClose }) {
                   onChange={handleChange}
                   rows="6"
                   required
-                  className="w-full border border-gray-300 rounded px-3 py-2"
+                  className="w-full border border-gray-300 rounded px-3 py-2 resize-none"
                   placeholder="Describa todos los detalles relevantes de su denuncia..."
                 />
                 {errores.description && <p className="text-red-500 text-sm mt-1">{errores.description}</p>}
               </div>
 
-              <div className="flex justify-between flex-col sm:flex-row ">
+              <div className="flex justify-between flex-col sm:flex-row">
                 <button type="button" onClick={prevStep} className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 mb-2 sm:mb-0 cursor-pointer">
                   Anterior
                 </button>
@@ -234,33 +352,63 @@ function FormularioDenuncia({ isOpen, onClose }) {
             <article>
               <div className="mb-6">
                 <label htmlFor="evidence" className="block text-sm font-medium text-gray-800 mb-2">
-                  Evidencia <span className="text-gray-500">(opcional)</span>
+                  Evidencia <span className="text-gray-500">(opcional - máx. 4 archivos)</span>
                 </label>
+
+                {/* Zona de drop */}
                 <div className="relative flex-col text-center justify-center bg-white border-2 border-dashed border-gray-300 hover:border-blue-900 rounded-lg shadow-sm px-4 py-3 transition hover:shadow-md">
                   <input
                     type="file"
                     id="evidence"
                     name="evidence"
                     multiple
+                    accept="image/*,.pdf,.doc,.docx,audio/*"
                     onChange={handleChange}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    disabled={loading}
                   />
-                  <div className="flex justify-center py-3 w-full flex-col items-center">
-                    {(!formData.evidence || formData.evidence.length === 0) ? (
-                      <>
-                        <Upload className="w-8 h-8 text-gray-400 mb-1" />
-                        <span className="text-gray-600 text-sm">Seleccionar múltiples archivos...</span>
-                      </>
-                    ) : (
-                      <span className="text-xs text-gray-600 flex flex-row gap-2 items-center text-center">
-                        <FileAlt className="w-5 h-5" />
-                        {formData.evidence.length} archivo{formData.evidence.length > 1 ? 's' : ''} seleccionado{formData.evidence.length > 1 ? 's' : ''}
-                      </span>
-                    )}
+                  <div className="flex justify-center py-3 w-full flex-col items-center pointer-events-none">
+                    <Upload className="w-8 h-8 text-gray-400 mb-1" />
+                    <span className="text-gray-600 text-sm">
+                      {formData.evidence.length > 0
+                        ? `${formData.evidence.length} archivo(s) seleccionado(s) - Click para cambiar`
+                        : 'Seleccionar hasta 4 archivos...'}
+                    </span>
                   </div>
                 </div>
+
+                {/* Lista de archivos seleccionados */}
+                {formData.evidence.length > 0 && (
+                  <div className="mt-4 space-y-2">
+                    {formData.evidence.map((file, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-3 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 hover:border-blue-900 transition-colors"
+                      >
+                        <FileAlt className="w-5 h-5 text-blue-900 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-700 truncate">
+                            {file.name}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {(file.size / 1024).toFixed(1)} KB
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeFile(index)}
+                          className="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded transition-colors cursor-pointer"
+                          title="Eliminar archivo"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <p className="text-xs text-gray-500 mt-2">
-                  Formatos permitidos: imágenes, documentos, audio (máx. 10MB)
+                  Formatos permitidos: imágenes (JPG, PNG, GIF, WebP), PDF, Word, audio (MP3, WAV, OGG) - Máx. 10MB por archivo
                 </p>
               </div>
 
@@ -287,7 +435,21 @@ function FormularioDenuncia({ isOpen, onClose }) {
                       {formData.description}
                     </p>
                   </div>
-                  <div><strong>Evidencias:</strong> {formData.evidence?.length ? `${formData.evidence.length} archivo(s)` : 'No adjuntada'}</div>
+                  <div>
+                    <strong>Evidencias:</strong>
+                    {formData.evidence?.length ? (
+                      <div className="mt-2 space-y-1">
+                        {formData.evidence.map((file, index) => (
+                          <div key={index} className="text-xs bg-gray-100 px-2 py-1 rounded flex items-center gap-2">
+                            <FileAlt className="w-4 h-4 text-blue-900" />
+                            <span className="truncate">{file.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-gray-500"> No adjuntada</span>
+                    )}
+                  </div>
                 </div>
                 <p className='bg-red-100 rounded-sm p-3 text-gray-800 mt-3 flex flex-col sm:flex-row gap-3 items-center'>
                   <Lock className='w-5 h-5 text-red-500 flex-shrink-0' />
@@ -299,8 +461,13 @@ function FormularioDenuncia({ isOpen, onClose }) {
                 <button type="button" onClick={prevStep} className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 mb-2 sm:mb-0 cursor-pointer">
                   Anterior
                 </button>
-                <button type="button" onClick={handleSubmit} className="px-4 py-2 rounded bg-blue-900 text-white hover:bg-blue-800 cursor-pointer">
-                  Enviar Denuncia
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="px-4 py-2 rounded bg-blue-900 text-white hover:bg-blue-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? 'Enviando...' : 'Enviar Denuncia'}
                 </button>
               </div>
             </article>
@@ -318,12 +485,11 @@ function App() {
     <div className="w-full">
       <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-white transition-all p-6 rounded-xl shadow-md hover:shadow-xl border-2 border-gray-200 cursor-pointer w-full "
+        className="bg-white transition-all p-6 rounded-xl shadow-md hover:shadow-xl border-2 border-gray-200 cursor-pointer w-full"
       >
         <div className="flex items-center gap-4">
           <div className="bg-gradient-to-r from-slate-700 to-blue-900 p-4 rounded-lg">
             <Circule className="w-8 h-8 text-white" />
-
           </div>
           <div className="text-left">
             <h4 className="font-bold text-lg mb-1">
@@ -337,7 +503,6 @@ function App() {
       </button>
 
       <FormularioDenuncia
-        id="usuario-123"
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />

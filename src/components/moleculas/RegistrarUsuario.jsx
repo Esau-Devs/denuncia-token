@@ -1,12 +1,8 @@
-
 import { useState, useRef, useCallback } from "react";
 import Webcam from "react-webcam";
-import { Eyes, EyesSlash, ShieldAlt, Upload, Camera, X, RefreshCw, Check } from "@/icons/AllIcons.tsx";
-
-
+import { Eyes, EyesSlash, ShieldAlt, Upload, Camera, X, RefreshCw, Check, AlertTriangle } from "@/icons/AllIcons.tsx";
 
 const RegistrarUsuario = () => {
-
     const [formData, setFormData] = useState({
         dui: '',
         password: '',
@@ -24,9 +20,14 @@ const RegistrarUsuario = () => {
     const [showDuiCamera, setShowDuiCamera] = useState(false);
     const [showFaceCamera, setShowFaceCamera] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
-    const [facingMode, setFacingMode] = useState("user"); // "user" = frontal, "environment" = trasera
-    const [serverError, setServerError] = useState('');
+    const [facingMode, setFacingMode] = useState("user");
 
+    // NUEVOS ESTADOS PARA ERRORES MODALES
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState({
+        title: '',
+        description: ''
+    });
 
     const webcamRef = useRef(null);
 
@@ -74,10 +75,11 @@ const RegistrarUsuario = () => {
         const file = e.target.files[0];
         if (file) {
             if (file.size > 5000000) {
-                setErrors(prev => ({
-                    ...prev,
-                    [type]: 'La imagen no debe superar los 5MB'
-                }));
+                setErrorMessage({
+                    title: 'Archivo muy grande',
+                    description: 'La imagen no debe superar los 5MB'
+                });
+                setShowErrorModal(true);
                 return;
             }
 
@@ -163,25 +165,66 @@ const RegistrarUsuario = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    // src/components/Registrar.jsx
+    // FUNCIÓN PARA MAPEAR ERRORES DEL SERVIDOR
+    const handleServerError = (status, data) => {
+        let title = 'Error en el registro';
+        let description = 'Ocurrió un error inesperado';
+
+        // Usuario ya existe (409)
+        if (status === 409 || data?.detail === 'Usuario ya existe') {
+            title = 'Usuario ya registrado';
+            description = 'Este DUI ya está registrado en el sistema. Intenta iniciar sesión o usa otro DUI.';
+        }
+        // DUI no coincide con la foto
+        else if (data?.detail?.includes('no coincide') || data?.detail?.includes('detectado')) {
+            title = 'DUI no coincide';
+            description = 'El DUI que ingresaste no coincide con el detectado en la foto. Verifica que el número sea correcto e intenta de nuevo.';
+        }
+        // Los rostros no coinciden
+        else if (data?.detail?.includes('rostro') || data?.detail?.includes('face') || data?.detail?.includes('no coincide')) {
+            title = 'Rostros no coinciden';
+            description = 'La foto del rostro no coincide con el DUI proporcionado. Por favor, intenta de nuevo.';
+        }
+        // Fotos con mala calidad
+        else if (data?.detail?.includes('calidad') || data?.detail?.includes('quality') || data?.detail?.includes('claro')) {
+            title = 'Foto con mala calidad';
+            description = 'Las fotos capturadas tienen mala calidad o no son claras. Asegúrate de que estén bien iluminadas e intenta de nuevo.';
+        }
+        // Error genérico 400
+        else if (status === 400) {
+            title = 'Datos inválidos';
+            description = data?.detail || 'Verifica que todos los datos sean correctos.';
+        }
+        // Error del servidor 500
+        else if (status >= 500) {
+            title = 'Error del servidor';
+            description = 'Ocurrió un error en el servidor. Por favor, intenta más tarde.';
+        }
+        // Otros errores
+        else {
+            description = data?.detail || 'Ocurrió un error inesperado. Por favor, intenta de nuevo.';
+        }
+
+        setErrorMessage({ title, description });
+        setShowErrorModal(true);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setServerError('');
+
         if (!validateForm()) {
             return;
         }
+
         setIsLoading(true);
 
-        // 1. CREAR EL OBJETO DE DATOS A ENVIAR
         const datosAEnviar = {
             dui: formData.dui,
             password: formData.password,
-            duiImage: duiImage,    // La imagen en formato base64
-            faceImage: faceImage,  // La imagen en formato base64
+            duiImage: duiImage,
+            faceImage: faceImage,
         };
 
-        // 2. LÍNEA DE DEPURACIÓN CRÍTICA (Antes de la llamada 'fetch')
         console.log(
             "Datos enviados:", datosAEnviar,
             "Largo DUI (caracteres):", duiImage ? duiImage.length : 'NULL/CERO',
@@ -196,37 +239,28 @@ const RegistrarUsuario = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                // Usamos el objeto de depuración para el body
                 body: JSON.stringify(datosAEnviar),
             });
 
-            // 3. Parsear la respuesta y manejar errores
             const data = await response.json();
 
             if (response.ok) {
-                // ... (Lógica de éxito)
                 setIsRegistered(true);
                 setFormData({ dui: '', password: '', confirmPassword: '' });
                 setDuiImage(null);
                 setFaceImage(null);
                 setErrors({});
-                setServerError('');
                 return;
             } else {
-                // Manejo de errores
-                // ...
-                // 4. Registrar la respuesta de error del servidor
                 console.error("Respuesta de error del backend:", data);
-
-                if (response.status === 409 || data.detail === 'Usuario ya existe') {
-                    // ... (Manejo de 409)
-                } else {
-                    // Aquí cae tu error 400. data.detail contendrá la causa real.
-                    setServerError(data.detail || 'Error en el registro');
-                }
+                handleServerError(response.status, data);
             }
         } catch (error) {
-            setServerError(error.message || 'Error de red');
+            setErrorMessage({
+                title: 'Error de conexión',
+                description: error.message || 'No se pudo conectar con el servidor. Verifica tu conexión a internet.'
+            });
+            setShowErrorModal(true);
         } finally {
             setIsLoading(false);
         }
@@ -239,22 +273,52 @@ const RegistrarUsuario = () => {
         facingMode: facingMode
     };
 
+    // MODAL DE ERROR
+    const ErrorModal = () => {
+        if (!showErrorModal) return null;
+
+        return (
+            <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 bg-opacity-50 backdrop-blur-xs inset-shadow-sm border border-gray-200 p-4">
+                <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+                    <div className="flex justify-center mb-4">
+                        <div className="bg-red-100 rounded-full p-3">
+                            <AlertTriangle className="w-8 h-8 sm:w-12 sm:h-12 text-red-600" />
+                        </div>
+                    </div>
+
+                    <div className="text-center mb-6">
+                        <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">
+                            {errorMessage.title}
+                        </h2>
+                        <p className="text-sm sm:text-base text-gray-600">
+                            {errorMessage.description}
+                        </p>
+                    </div>
+
+                    <button
+                        onClick={() => setShowErrorModal(false)}
+                        className="w-full bg-[#0c3b87] text-white py-3 px-4 rounded-lg font-medium hover:bg-[#0a2f6b] transition-colors duration-200 cursor-pointer"
+                    >
+                        Aceptar
+                    </button>
+                </div>
+            </div>
+        );
+    };
+
     // Componente de cámara modal
     const CameraModal = ({ isOpen, onClose, onCapture, title, type }) => {
         if (!isOpen) return null;
 
         return (
             <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
-
-
-
                 <div className="w-full max-w-3xl bg-white rounded-xl overflow-hidden shadow-lg h-80vh flex flex-col">
                     {/* Header */}
                     <div className="bg-[#0c3b87] text-white p-4 flex items-center justify-between">
                         <h3 className="text-lg font-semibold">{title}</h3>
                         <button
                             onClick={onClose}
-                            className="text-white  hover:bg-opacity-20 rounded-full p-2 transition-colors"
+                            className="text-white hover:bg-opacity-20 rounded-full p-2 transition-colors"
                         >
                             <X className="w-6 h-6" />
                         </button>
@@ -341,8 +405,12 @@ const RegistrarUsuario = () => {
 
     return (
         <div className="container mx-auto flex items-center justify-center min-h-screen p-4">
+            {/* MODAL DE ERROR */}
+            <ErrorModal />
+
+            {/* Modal de éxito */}
             {isRegistered && (
-                <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50 bg-opacity-50 backdrop-blur-xs inset-shadow-sm border border-gray-200 p-4">
+                <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 bg-opacity-50 backdrop-blur-xs inset-shadow-sm border border-gray-200 p-4">
                     {/* Modal */}
                     <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 mx-4">
                         {/* Icono de alerta */}
@@ -372,8 +440,6 @@ const RegistrarUsuario = () => {
                     </div>
                 </div>
             )}
-
-
 
             <div className="w-full max-w-lg space-y-8">
                 <div className="text-center space-y-4">
@@ -409,7 +475,6 @@ const RegistrarUsuario = () => {
                             {errors.dui && (
                                 <p className="text-red-600 text-sm">{errors.dui}</p>
                             )}
-
                         </div>
 
                         {/* DUI Image Capture */}
