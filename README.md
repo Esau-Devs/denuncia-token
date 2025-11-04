@@ -2,8 +2,7 @@
 
 >  ​🕵️​ **Enviar denuncias anónimas a la FGR de El Salvador. altos estándares de privacidad digital.**
 
-![image](https://github.com/user-attachments/assets/eb3f0195-6b1a-458d-adc4-2e43d8a1f198)
-
+<img width="740" height="808" alt="image" src="https://github.com/user-attachments/assets/35af1e79-89fc-41b9-9e03-27e2a12c80b3" />
 
 ## 🚀 Project Structure
 
