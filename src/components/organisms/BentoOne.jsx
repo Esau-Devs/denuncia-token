@@ -11,8 +11,9 @@ export const BentoOne = () => {
 
 
         try {
+            const URLBACKEND = 'https://backend-api-638220759621.us-central1.run.app';
             // El endpoint de logout en tu FastAPI
-            const apiUrl = 'http://localhost:8000/api/auth/logout';
+            const apiUrl = `${URLBACKEND}/api/auth/logout`;
 
             const response = await fetch(apiUrl, {
                 method: 'POST',

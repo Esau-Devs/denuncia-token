@@ -232,7 +232,8 @@ const RegistrarUsuario = () => {
         );
 
         try {
-            const apiUrl = 'http://localhost:8000/api/auth/register';
+            URLBACKEND = 'https://backend-api-638220759621.us-central1.run.app';
+            const apiUrl = `${URLBACKEND}/api/auth/register`;
 
             const response = await fetch(apiUrl, {
                 method: 'POST',
