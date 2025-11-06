@@ -80,7 +80,7 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        const URLBACKEND = 'https://backend-api-638220759621.us-central1.run.app';
         if (!validateForm()) {
             setMessage('Por favor, rellena todos los campos requeridos.', 'error');
             return;
@@ -89,7 +89,7 @@ export default function Login() {
         setIsLoading(true);
 
         try {
-            const apiUrl = 'http://localhost:8000/api/auth/login';
+            const apiUrl = `${URLBACKEND}/api/auth/login`;
 
             const response = await fetch(apiUrl, {
                 method: 'POST',
