@@ -1,134 +1,155 @@
 import { defineMiddleware, sequence } from 'astro/middleware';
-// La ruta de importación es './constants' (asumiendo que está en src/)
-import { ACCESS_TOKEN_COOKIE_NAME } from './constants'; // ✅ CORRECCIÓN: Re-habilitamos la importación.
-// 🔥 ELIMINAMOS la definición local que forzaba el nombre: const SESSION_COOKIE_NAME = "session_token";
+import { ACCESS_TOKEN_COOKIE_NAME } from './constants';
+
 const URLAPI = 'https://backend-api-638220759621.us-central1.run.app';
-// Define la ruta donde se verifica el estado de la sesión
 const AUTH_VERIFY_URL = `${URLAPI}/api/auth/verify-session`;
-
-// 🔑 CORRECCIÓN: La ruta de login es la raíz, la marcamos como /
 const LOGIN_PATH = '/';
-
-// Rutas protegidas que requieren sesión (SOLO RUTAS INTERNAS)
-// Si el usuario no está autenticado, cualquier acceso a estas rutas se redirigirá a LOGIN_PATH ('/')
 const PROTECTED_PATHS = ['/home'];
-
-// Rutas de autenticación (Estas deben ser bloqueadas si el usuario ya está autenticado)
-// Ahora incluye la raíz '/' como la página de login
 const AUTH_PATHS = ['/', '/registrar'];
 
 /**
- * Realiza una llamada al backend de FastAPI para validar el token HttpOnly.
- * * CRÍTICO: Si la cookie no está siendo enviada correctamente a FastAPI,
- * este middleware la lee de la petición entrante y la reenvía como
- * un encabezado de Autorización (el workaround).
+ * Verifica si el token de sesión es válido llamando al backend de FastAPI
  */
-const verifySession = async (token: string | undefined): Promise<boolean> => {
-    // 💡 DIAGNÓSTICO 1: Comprobar si el token fue extraído de la cookie
+const verifySession = async (token: string | undefined, pathname: string): Promise<boolean> => {
+    console.log('\n🔐 [MIDDLEWARE] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log(`🔐 [MIDDLEWARE] Verificando sesión para ruta: ${pathname}`);
+
     if (!token) {
-        console.log('[AUTH DEBUG] Token no encontrado en la cookie.');
+        console.log('❌ [MIDDLEWARE] Token NO encontrado en la cookie');
+        console.log(`   Cookie buscada: ${ACCESS_TOKEN_COOKIE_NAME}`);
+        console.log('🔐 [MIDDLEWARE] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
         return false;
     }
 
-    // 💡 Creamos los encabezados para la petición a FastAPI
+    console.log('✅ [MIDDLEWARE] Token encontrado en cookie');
+    console.log(`   Longitud del token: ${token.length} caracteres`);
+    console.log(`   Primeros 10 caracteres: ${token.substring(0, 10)}...`);
+
     const headers = new Headers();
+    headers.set('Authorization', `Bearer ${token}`);
 
-    // 💡 WORKAROUND: Forzamos el envío del token en el encabezado Authorization.
-    const authHeaderValue = `Bearer ${token}`;
-    headers.set('Authorization', authHeaderValue);
-
-    // 🚨 DIAGNÓSTICO 2: Confirmar que el encabezado va a ser enviado (parcialmente)
-    console.log(`[AUTH DEBUG] Verificando sesión en: ${AUTH_VERIFY_URL}`);
-    console.log(`[AUTH DEBUG] Token encontrado. Longitud: ${token.length}.`);
-    // No mostrar el token completo por seguridad, pero confirmamos su presencia
+    console.log(`📡 [MIDDLEWARE] Llamando a: ${AUTH_VERIFY_URL}`);
+    console.log('📡 [MIDDLEWARE] Con encabezado Authorization');
 
     try {
+        const startTime = Date.now();
         const response = await fetch(AUTH_VERIFY_URL, {
             method: 'GET',
-            headers: headers, // 💡 Usamos los nuevos encabezados
+            headers: headers,
             credentials: 'include',
         });
+        const endTime = Date.now();
 
-        // 🚨 DIAGNÓSTICO 3: Revisar el estado de la respuesta del backend
+        console.log(`⏱️  [MIDDLEWARE] Respuesta recibida en ${endTime - startTime}ms`);
+        console.log(`📨 [MIDDLEWARE] Status HTTP: ${response.status} (${response.statusText})`);
+
         if (!response.ok) {
-            console.error(
-                `[AUTH ERROR] Verificación de sesión fallida. Estado HTTP: ${response.status} (${response.statusText})`
-            );
-            // Intenta leer el cuerpo del error si existe
+            console.error('❌ [MIDDLEWARE] Verificación FALLIDA');
+
             try {
                 const errorBody = await response.json();
-                console.error('[AUTH ERROR] Cuerpo de respuesta (FastAPI):', errorBody);
+                console.error('📄 [MIDDLEWARE] Cuerpo del error:', JSON.stringify(errorBody, null, 2));
             } catch (e) {
-                // El cuerpo no es JSON, ignora
+                console.error('📄 [MIDDLEWARE] No se pudo parsear cuerpo del error');
             }
+
+            console.log('🔐 [MIDDLEWARE] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
             return false;
         }
 
-        console.log('[AUTH SUCCESS] Sesión verificada correctamente (200 OK).');
+        console.log('✅ [MIDDLEWARE] Sesión VERIFICADA correctamente (200 OK)');
+        console.log('🔐 [MIDDLEWARE] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
         return true;
+
     } catch (error) {
-        // Ignoramos errores de red/conexión (FastAPI no está corriendo, o problema de CORS/red).
-        console.error('[AUTH FATAL] Error al verificar la sesión (fallo de red/conexión con FastAPI):', error);
+        console.error('💥 [MIDDLEWARE] Error FATAL al verificar sesión:');
+        console.error('   Error:', error instanceof Error ? error.message : String(error));
+        console.error('   Posibles causas:');
+        console.error('   - Backend de FastAPI no está corriendo');
+        console.error('   - Problema de red/conectividad');
+        console.error('   - Error de CORS');
+        console.log('🔐 [MIDDLEWARE] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
         return false;
     }
 };
 
-
 const authMiddleware = defineMiddleware(async (context, next) => {
     const pathname = context.url.pathname;
 
+    console.log('\n🌐 [MIDDLEWARE] ═══════════════════════════════════════════');
+    console.log(`🌐 [MIDDLEWARE] Nueva petición: ${context.request.method} ${pathname}`);
+    console.log(`🌐 [MIDDLEWARE] Timestamp: ${new Date().toISOString()}`);
 
-    // Comprobar si la ruta es una ruta de autenticación (/, /registrar)
+    // Verificar tipo de ruta
     const isAuthPath = AUTH_PATHS.includes(pathname);
-
-    // Comprobar si la ruta es protegida o es una sub-ruta de una ruta protegida
     const isProtected = PROTECTED_PATHS.some(path =>
-        // Coincidencia exacta O comienza con la ruta protegida + barra (ej. /home/denuncias)
         pathname === path || pathname.startsWith(`${path}/`)
     );
     const isKnownRoute = isAuthPath || isProtected;
-    // Usamos la constante para obtener la cookie de la Petición ENTRANTE del cliente
-    // ¡Aquí es donde obtenemos el token HttpOnly!
-    // ✅ CAMBIO: Usamos la constante importada
+
+    console.log('📋 [MIDDLEWARE] Clasificación de ruta:');
+    console.log(`   ¿Es ruta de autenticación? ${isAuthPath ? '✅' : '❌'}`);
+    console.log(`   ¿Es ruta protegida? ${isProtected ? '✅' : '❌'}`);
+    console.log(`   ¿Es ruta conocida? ${isKnownRoute ? '✅' : '❌'}`);
+
+    // Intentar obtener la cookie
+    console.log(`\n🍪 [MIDDLEWARE] Buscando cookie: ${ACCESS_TOKEN_COOKIE_NAME}`);
     const sessionToken = context.cookies.get(ACCESS_TOKEN_COOKIE_NAME)?.value;
 
+    if (sessionToken) {
+        console.log('✅ [MIDDLEWARE] Cookie encontrada en la petición');
+    } else {
+        console.log('❌ [MIDDLEWARE] Cookie NO encontrada en la petición');
+        console.log('   (Intentando acceder sin cookie de sesión)');
+    }
 
-    // Verificar si la sesión es válida (llama al backend, usando el token de la cookie en el encabezado)
-    const isAuthenticated = await verifySession(sessionToken);
+    // Verificar autenticación
+    const isAuthenticated = await verifySession(sessionToken, pathname);
+    console.log(`\n🔒 [MIDDLEWARE] Estado de autenticación: ${isAuthenticated ? '✅ AUTENTICADO' : '❌ NO AUTENTICADO'}`);
 
-
+    // Manejar rutas desconocidas
     if (!isKnownRoute) {
+        console.log('⚠️  [MIDDLEWARE] Ruta desconocida detectada');
         if (isAuthenticated) {
-            // Usuario autenticado en ruta inexistente → redirigir al home
+            console.log('➡️  [MIDDLEWARE] Redirigiendo usuario autenticado a /home');
+            console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
             return context.redirect('/home', 302);
         } else {
-            // Usuario NO autenticado en ruta inexistente → redirigir al login
+            console.log('➡️  [MIDDLEWARE] Redirigiendo usuario no autenticado a /');
+            console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
             return context.redirect(LOGIN_PATH, 302);
         }
     }
 
-    // --- LÓGICA DE MANEJO DE SESIÓN ---
-
-    // Caso A: Usuario Autenticado
+    // Usuario AUTENTICADO
     if (isAuthenticated) {
-        // Si está logueado e intenta ir a las rutas de autenticación ('/' o /registrar), lo redirigimos a /home.
+        console.log('✅ [MIDDLEWARE] Usuario autenticado procesando ruta...');
+
         if (isAuthPath) {
+            console.log('➡️  [MIDDLEWARE] Usuario autenticado intentando acceder a ruta de auth');
+            console.log('   Redirigiendo a /home (ya está logueado)');
+            console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
             return context.redirect('/home', 302);
         }
-        // Si está logueado y va a cualquier otra ruta, lo dejamos pasar.
+
+        console.log('✅ [MIDDLEWARE] Permitiendo acceso a ruta protegida');
+        console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
         return next();
     }
 
-    // Caso B: Usuario NO Autenticado
+    // Usuario NO AUTENTICADO
+    console.log('❌ [MIDDLEWARE] Usuario NO autenticado procesando ruta...');
 
-    // Si NO está logueado y está intentando acceder a una ruta protegida (/home o sub-rutas), lo redirigimos a LOGIN_PATH (que ahora es '/').
     if (isProtected) {
+        console.log('➡️  [MIDDLEWARE] Intentando acceder a ruta protegida sin autenticación');
+        console.log('   Redirigiendo a / (login)');
+        console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
         return context.redirect(LOGIN_PATH, 302);
     }
 
-    // Si NO está logueado y está en una ruta de autenticación ('/' o /registrar), lo dejamos pasar.
+    console.log('✅ [MIDDLEWARE] Permitiendo acceso a ruta de autenticación');
+    console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
     return next();
 });
 
-// La función onRequest debe exportar la secuencia de middleware.
 export const onRequest = sequence(authMiddleware);

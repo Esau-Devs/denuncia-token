@@ -15,11 +15,8 @@ export default function Login() {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
-        // Format DUI input
         if (name === 'dui') {
-            // Remove all non-digits and limit to 9 digits
             const digits = value.replace(/\D/g, '').slice(0, 9);
-            // Format as XXXXXXXX-X
             let formattedDui = digits;
             if (digits.length > 8) {
                 formattedDui = digits.slice(0, 8) + '-' + digits.slice(8);
@@ -35,7 +32,6 @@ export default function Login() {
             }));
         }
 
-        // Clear error when user starts typing
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,
@@ -50,7 +46,6 @@ export default function Login() {
         if (!formData.dui) {
             newErrors.dui = 'El DUI es requerido';
         } else {
-            // Remove dash for validation
             const duiDigits = formData.dui.replace('-', '');
             if (duiDigits.length !== 9) {
                 newErrors.dui = 'El DUI debe tener 9 dígitos';
@@ -69,70 +64,94 @@ export default function Login() {
         return Object.keys(newErrors).length === 0;
     };
 
-    // --- FUNCIÓN DE SUBMISIÓN CORREGIDA ---
+    // 🔥 SOLUCIÓN: Cambiamos completamente el manejo del submit
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        console.log('[LOGIN] 🚀 Iniciando proceso de login...');
+
         if (!validateForm()) {
-            // Aquí puedes agregar un mensaje de error general si lo deseas
+            console.log('[LOGIN] ❌ Validación de formulario fallida');
             return;
         }
 
         setIsLoading(true);
 
-        // 🔑 CAMBIO CRÍTICO: Apuntar a la ruta API local de Astro.
-        // Astro es el único que puede establecer la cookie HttpOnly en Vercel.
         const apiUrl = '/api/auth/login';
 
         try {
+            console.log('[LOGIN] 📤 Enviando credenciales a:', apiUrl);
+            console.log('[LOGIN] 📋 DUI:', formData.dui);
 
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                // 🔑 CRÍTICO: Agregamos credentials para que las cookies se manejen correctamente
+                credentials: 'same-origin',
                 body: JSON.stringify({
                     dui: formData.dui,
                     password: formData.password,
                 }),
+                // 🔑 IMPORTANTE: No seguir redirecciones automáticamente
+                redirect: 'manual'
             });
 
-            // 1. Manejar Redirección de Éxito (Status 302)
-            // La ruta API de Astro establece la cookie y emite un 302.
-            if (response.status === 302 || response.redirected) {
-                // Forzar la navegación del navegador para que siga la redirección
-                // y recargue la página, permitiendo que el middleware compruebe la nueva cookie.
-                if (typeof window !== 'undefined') {
-                    window.location.href = response.headers.get('Location') || '/home';
-                }
-                // Si la redirección fue manual, salimos.
+            console.log('[LOGIN] 📨 Respuesta recibida - Status:', response.status);
+            console.log('[LOGIN] 📨 Response type:', response.type);
+
+            // 🔥 CAMBIO CRÍTICO: Manejar correctamente el 302
+            // Cuando redirect: 'manual', el response.type será 'opaqueredirect' para 302
+            if (response.type === 'opaqueredirect' || response.status === 0) {
+                console.log('[LOGIN] ✅ Redirección detectada (302) - Login exitoso');
+                console.log('[LOGIN] 🍪 Cookie establecida por Astro');
+                console.log('[LOGIN] 🔄 Forzando recarga completa de la página...');
+
+                // Forzar recarga completa para que el middleware valide la nueva cookie
+                // Usamos window.location.href en lugar de replace para asegurar recarga
+                setTimeout(() => {
+                    window.location.href = '/home';
+                }, 100); // Pequeño delay para asegurar que la cookie se escribió
+
                 return;
             }
 
-            // 2. Manejar Errores (Status 401, 400, 500)
-            if (!response.ok) {
-                const data = await response.json();
-                console.error('Respuesta de error del servidor Astro/FastAPI:', data);
+            // Si llegamos aquí, no fue exitoso
+            console.log('[LOGIN] ⚠️ Respuesta no fue redirección - verificando errores...');
 
-                // Si el error viene por credenciales inválidas (401 de FastAPI, retransmitido por Astro)
-                if (response.status === 401 || data.detail === 'credenciales_invalidas') {
-                    setIsMessageAuthenticated(true);
+            // Intentar leer el cuerpo de la respuesta
+            let data;
+            try {
+                data = await response.json();
+                console.log('[LOGIN] 📄 Datos de respuesta:', data);
+            } catch (jsonError) {
+                console.error('[LOGIN] ❌ Error parseando JSON:', jsonError);
+                data = { detail: 'Error desconocido' };
+            }
 
-                    setTimeout(() => {
-                        setIsMessageAuthenticated(false);
-                        setFormData({ dui: '', password: '' });
-                        setErrors({});
-                    }, 3000);
-                } else {
-                    // Manejar otros errores (API no disponible, error interno, etc.)
-                }
+            // Manejar error 401 (credenciales inválidas)
+            if (response.status === 401 || data.detail === 'credenciales_invalidas') {
+                console.log('[LOGIN] 🚫 Credenciales inválidas (401)');
+                setIsMessageAuthenticated(true);
+
+                setTimeout(() => {
+                    setIsMessageAuthenticated(false);
+                    setFormData({ dui: '', password: '' });
+                    setErrors({});
+                }, 3000);
+            } else {
+                console.error('[LOGIN] ❌ Error del servidor:', response.status, data);
+                // Aquí puedes agregar un mensaje de error genérico si lo deseas
+                alert('Error del servidor. Por favor, intenta de nuevo.');
             }
 
         } catch (error) {
-            console.error('Error de red al intentar enviar el login:', error);
-            // Manejar errores de red o conexión
+            console.error('[LOGIN] 💥 Error de red/conexión:', error);
+            alert('Error de conexión. Verifica tu internet e intenta de nuevo.');
         } finally {
             setIsLoading(false);
+            console.log('[LOGIN] 🏁 Proceso de login finalizado');
         }
     };
 

@@ -1,27 +1,29 @@
 import type { APIRoute } from 'astro';
-// Asumiendo que estos valores están definidos en src/constants
-// Por favor, verifica que tienes un archivo src/constants.ts con:
-// export const API_BASE_URL = "http://localhost:8000"; 
-// export const ACCESS_TOKEN_COOKIE_NAME = "access_token";
 import { ACCESS_TOKEN_COOKIE_NAME, API_BASE_URL } from '../../../constants';
 
-// Define la URL del endpoint de login en tu backend de FastAPI
 const AUTH_LOGIN_URL = `${API_BASE_URL}/api/auth/login`;
 
 /**
  * Maneja la solicitud de inicio de sesión.
- * 1. Recibe el DUI y la contraseña del componente React.
- * 2. Llama al backend de FastAPI para autenticar.
- * 3. Si es exitoso, extrae el token de la respuesta de FastAPI.
- * 4. Establece el token como una cookie HttpOnly, Secure y SameSite=None en el navegador.
- * 5. Redirige al usuario a la página de inicio (/home).
  */
 export const POST: APIRoute = async ({ request, cookies, redirect }) => {
+    console.log('\n🔐 [LOGIN API] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('🔐 [LOGIN API] Nueva petición de login recibida');
+    console.log(`🔐 [LOGIN API] Timestamp: ${new Date().toISOString()}`);
+
     try {
-        // 1. Obtener datos del cuerpo de la solicitud (enviados por React)
-        const { dui, password } = await request.json();
+        // 1. Obtener datos del cuerpo
+        const body = await request.json();
+        const { dui, password } = body;
+
+        console.log('📋 [LOGIN API] Datos recibidos del frontend:');
+        console.log(`   DUI: ${dui}`);
+        console.log(`   Password: ${'*'.repeat(password?.length || 0)}`);
 
         // 2. Llamar al backend de FastAPI
+        console.log(`\n📡 [LOGIN API] Llamando a FastAPI: ${AUTH_LOGIN_URL}`);
+        const startTime = Date.now();
+
         const fastApiResponse = await fetch(AUTH_LOGIN_URL, {
             method: 'POST',
             headers: {
@@ -30,19 +32,30 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
             body: JSON.stringify({ dui, password }),
         });
 
-        const data = await fastApiResponse.json();
+        const endTime = Date.now();
+        console.log(`⏱️  [LOGIN API] Respuesta de FastAPI recibida en ${endTime - startTime}ms`);
+        console.log(`📨 [LOGIN API] Status HTTP: ${fastApiResponse.status} (${fastApiResponse.statusText})`);
 
-        // 3. Manejar el éxito y la autenticación
+        const data = await fastApiResponse.json();
+        console.log('📄 [LOGIN API] Respuesta de FastAPI:', JSON.stringify(data, null, 2));
+
+        // 3. Verificar éxito y extraer token
         if (fastApiResponse.ok && data.token) {
-            // CRÍTICO: El token ahora viene en la clave 'token' (revisado en auth_router.py)
             const accessToken = data.token;
 
-            // 4. 🔥 ACCIÓN CRÍTICA: Establecer la cookie de sesión segura en Astro
-            // Esto es crucial para el flujo de autenticación server-side (Astro Middleware)
-            // HttpOnly: Previene acceso por JS (seguridad).
-            // Secure: Solo se envía sobre HTTPS.
-            // SameSite=None: Permite enviar la cookie en llamadas de CORS (necesario para el backend de FastAPI).
-            // maxAge: 1 hora de validez (3600 segundos).
+            console.log('\n✅ [LOGIN API] Autenticación exitosa en FastAPI');
+            console.log(`🔑 [LOGIN API] Token recibido (longitud: ${accessToken.length})`);
+            console.log(`   Primeros 15 caracteres: ${accessToken.substring(0, 15)}...`);
+
+            // 4. Establecer cookie HttpOnly
+            console.log(`\n🍪 [LOGIN API] Estableciendo cookie: ${ACCESS_TOKEN_COOKIE_NAME}`);
+            console.log('🍪 [LOGIN API] Configuración de cookie:');
+            console.log('   httpOnly: true (no accesible desde JS)');
+            console.log('   secure: true (solo HTTPS)');
+            console.log('   sameSite: none (permite CORS)');
+            console.log('   path: / (disponible en toda la app)');
+            console.log('   maxAge: 3600 segundos (1 hora)');
+
             cookies.set(
                 ACCESS_TOKEN_COOKIE_NAME,
                 accessToken,
@@ -50,18 +63,26 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
                     httpOnly: true,
                     secure: true,
                     path: '/',
-                    sameSite: 'none', // Necesario para FastAPI/CORS
-                    maxAge: 3600, // 1 hora
+                    sameSite: 'none',
+                    maxAge: 3600,
                 }
             );
 
-            // 5. Redirigir al usuario al home (Status 302)
-            // La respuesta será interceptada por el componente React para forzar la navegación.
+            console.log('✅ [LOGIN API] Cookie establecida exitosamente');
+
+            // 5. Redirigir a /home
+            console.log('\n➡️  [LOGIN API] Preparando redirección a /home (302)');
+            console.log('🔐 [LOGIN API] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
             return redirect('/home', 302);
         }
 
-        // Manejar fallas de autenticación (e.g., 401 Unauthorized)
-        // Devolvemos el error de FastAPI para que React lo muestre.
+        // Autenticación fallida
+        console.log('\n❌ [LOGIN API] Autenticación fallida');
+        console.log(`   Status: ${fastApiResponse.status}`);
+        console.log(`   Detalle: ${data.detail || 'No especificado'}`);
+        console.log('🔐 [LOGIN API] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
         return new Response(JSON.stringify(data), {
             status: fastApiResponse.status,
             headers: {
@@ -70,9 +91,11 @@ export const POST: APIRoute = async ({ request, cookies, redirect }) => {
         });
 
     } catch (error) {
-        console.error('[ASTRO API FATAL] Error en el procesamiento del login:', error);
+        console.error('\n💥 [LOGIN API] Error FATAL en el procesamiento:');
+        console.error('   Error:', error instanceof Error ? error.message : String(error));
+        console.error('   Stack:', error instanceof Error ? error.stack : 'N/A');
+        console.log('🔐 [LOGIN API] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
-        // Devolver un error genérico en caso de fallas de red o JSON inválido.
         return new Response(JSON.stringify({
             detail: 'Error interno del servidor. Inténtalo de nuevo.',
             error: error instanceof Error ? error.message : String(error),
