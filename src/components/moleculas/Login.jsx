@@ -80,14 +80,14 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const URLBACKEND = 'https://backend-api-638220759621.us-central1.run.app';
+
         if (!validateForm()) {
             setMessage('Por favor, rellena todos los campos requeridos.', 'error');
             return;
         }
 
         setIsLoading(true);
-
+        const URLBACKEND = 'https://backend-api-638220759621.us-central1.run.app';
         try {
             const apiUrl = `${URLBACKEND}/api/auth/login`;
 

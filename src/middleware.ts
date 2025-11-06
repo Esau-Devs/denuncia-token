@@ -1,9 +1,10 @@
 import { defineMiddleware, sequence } from 'astro/middleware';
 // La ruta de importación es './constants' (asumiendo que está en src/)
-import { ACCESS_TOKEN_COOKIE_NAME } from './constants';
-
+import { ACCESS_TOKEN_COOKIE_NAME } from './constants'; // ✅ CORRECCIÓN: Re-habilitamos la importación.
+// 🔥 ELIMINAMOS la definición local que forzaba el nombre: const SESSION_COOKIE_NAME = "session_token";
+const URLAPI = 'https://backend-api-638220759621.us-central1.run.app';
 // Define la ruta donde se verifica el estado de la sesión
-const AUTH_VERIFY_URL = 'http://localhost:8000/api/auth/verify-session';
+const AUTH_VERIFY_URL = `${URLAPI}/api/auth/verify-session`;
 
 // 🔑 CORRECCIÓN: La ruta de login es la raíz, la marcamos como /
 const LOGIN_PATH = '/';
@@ -23,8 +24,9 @@ const AUTH_PATHS = ['/', '/registrar'];
  * un encabezado de Autorización (el workaround).
  */
 const verifySession = async (token: string | undefined): Promise<boolean> => {
+    // 💡 DIAGNÓSTICO 1: Comprobar si el token fue extraído de la cookie
     if (!token) {
-
+        console.log('[AUTH DEBUG] Token no encontrado en la cookie.');
         return false;
     }
 
@@ -35,30 +37,38 @@ const verifySession = async (token: string | undefined): Promise<boolean> => {
     const authHeaderValue = `Bearer ${token}`;
     headers.set('Authorization', authHeaderValue);
 
-    // 🚨 NUEVO DIAGNÓSTICO: Confirmar que el encabezado va a ser enviado
-
+    // 🚨 DIAGNÓSTICO 2: Confirmar que el encabezado va a ser enviado (parcialmente)
+    console.log(`[AUTH DEBUG] Verificando sesión en: ${AUTH_VERIFY_URL}`);
+    console.log(`[AUTH DEBUG] Token encontrado. Longitud: ${token.length}.`);
+    // No mostrar el token completo por seguridad, pero confirmamos su presencia
 
     try {
         const response = await fetch(AUTH_VERIFY_URL, {
             method: 'GET',
             headers: headers, // 💡 Usamos los nuevos encabezados
-            // NOTA: credentials: 'include' ya no es CRUCIAL aquí porque enviamos el token
-            // en el encabezado, pero lo mantenemos como fallback para la cookie.
             credentials: 'include',
         });
 
-
+        // 🚨 DIAGNÓSTICO 3: Revisar el estado de la respuesta del backend
         if (!response.ok) {
-            console.error("Error en la verificación de sesión:", response.statusText);
+            console.error(
+                `[AUTH ERROR] Verificación de sesión fallida. Estado HTTP: ${response.status} (${response.statusText})`
+            );
+            // Intenta leer el cuerpo del error si existe
+            try {
+                const errorBody = await response.json();
+                console.error('[AUTH ERROR] Cuerpo de respuesta (FastAPI):', errorBody);
+            } catch (e) {
+                // El cuerpo no es JSON, ignora
+            }
             return false;
         }
-        return response.ok;
 
-
-
+        console.log('[AUTH SUCCESS] Sesión verificada correctamente (200 OK).');
+        return true;
     } catch (error) {
-        // Ignoramos errores de red/conexión.
-        console.error("Error al verificar la sesión con FastAPI:", error);
+        // Ignoramos errores de red/conexión (FastAPI no está corriendo, o problema de CORS/red).
+        console.error('[AUTH FATAL] Error al verificar la sesión (fallo de red/conexión con FastAPI):', error);
         return false;
     }
 };
@@ -79,6 +89,7 @@ const authMiddleware = defineMiddleware(async (context, next) => {
     const isKnownRoute = isAuthPath || isProtected;
     // Usamos la constante para obtener la cookie de la Petición ENTRANTE del cliente
     // ¡Aquí es donde obtenemos el token HttpOnly!
+    // ✅ CAMBIO: Usamos la constante importada
     const sessionToken = context.cookies.get(ACCESS_TOKEN_COOKIE_NAME)?.value;
 
 
