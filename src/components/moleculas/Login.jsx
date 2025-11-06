@@ -1,11 +1,7 @@
-
 import { useState } from "react";
 import { Eyes, ShieldAlt, EyesSlash, AlertTriangle } from "@/icons/AllIcons.tsx";
 
-
 export default function Login() {
-
-
 
     const [formData, setFormData] = useState({
         dui: '',
@@ -15,9 +11,6 @@ export default function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [isMessageAuthenticated, setIsMessageAuthenticated] = useState(false);
-
-
-
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -76,20 +69,22 @@ export default function Login() {
         return Object.keys(newErrors).length === 0;
     };
 
-    // src/components/moleculas/Login.jsx (Función handleSubmit corregida)
-
+    // --- FUNCIÓN DE SUBMISIÓN CORREGIDA ---
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!validateForm()) {
-            setMessage('Por favor, rellena todos los campos requeridos.', 'error');
+            // Aquí puedes agregar un mensaje de error general si lo deseas
             return;
         }
 
         setIsLoading(true);
-        const URLBACKEND = 'https://backend-api-638220759621.us-central1.run.app';
+
+        // 🔑 CAMBIO CRÍTICO: Apuntar a la ruta API local de Astro.
+        // Astro es el único que puede establecer la cookie HttpOnly en Vercel.
+        const apiUrl = '/api/auth/login';
+
         try {
-            const apiUrl = `${URLBACKEND}/api/auth/login`;
 
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -100,43 +95,42 @@ export default function Login() {
                     dui: formData.dui,
                     password: formData.password,
                 }),
-                // Esencial para enviar/recibir la cookie HttpOnly
-                credentials: 'include',
             });
 
-            if (response.ok) {
-                /*  alert('¡Login exitoso! Bienvenido a la plataforma.', 'success'); */
-
-                // 🔑 CAMBIO CRUCIAL: Reemplazar navigate() por window.location.href
-                // 🔑 Añadir la verificación de 'window' para evitar el error de SSR de Astro
+            // 1. Manejar Redirección de Éxito (Status 302)
+            // La ruta API de Astro establece la cookie y emite un 302.
+            if (response.status === 302 || response.redirected) {
+                // Forzar la navegación del navegador para que siga la redirección
+                // y recargue la página, permitiendo que el middleware compruebe la nueva cookie.
                 if (typeof window !== 'undefined') {
-                    window.location.href = '/home';
+                    window.location.href = response.headers.get('Location') || '/home';
                 }
+                // Si la redirección fue manual, salimos.
+                return;
+            }
 
-            } else {
-
+            // 2. Manejar Errores (Status 401, 400, 500)
+            if (!response.ok) {
                 const data = await response.json();
-                console.log('Respuesta de error del servidor:', data);
-                if (response.status === 401 || data.detail === 'Credenciales inválidas') {
+                console.error('Respuesta de error del servidor Astro/FastAPI:', data);
+
+                // Si el error viene por credenciales inválidas (401 de FastAPI, retransmitido por Astro)
+                if (response.status === 401 || data.detail === 'credenciales_invalidas') {
                     setIsMessageAuthenticated(true);
 
-
                     setTimeout(() => {
+                        setIsMessageAuthenticated(false);
                         setFormData({ dui: '', password: '' });
                         setErrors({});
-
                     }, 3000);
-
+                } else {
+                    // Manejar otros errores (API no disponible, error interno, etc.)
                 }
-
-
             }
 
         } catch (error) {
-            console.error('Error en login:', error);
-
-
-
+            console.error('Error de red al intentar enviar el login:', error);
+            // Manejar errores de red o conexión
         } finally {
             setIsLoading(false);
         }

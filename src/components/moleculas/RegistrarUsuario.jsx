@@ -210,6 +210,7 @@ const RegistrarUsuario = () => {
     };
 
     const handleSubmit = async (e) => {
+        const URLBACKEND = 'https://backend-api-638220759621.us-central1.run.app';
         e.preventDefault();
 
         if (!validateForm()) {
@@ -232,7 +233,7 @@ const RegistrarUsuario = () => {
         );
 
         try {
-            URLBACKEND = 'https://backend-api-638220759621.us-central1.run.app';
+
             const apiUrl = `${URLBACKEND}/api/auth/register`;
 
             const response = await fetch(apiUrl, {
