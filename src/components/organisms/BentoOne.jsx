@@ -8,39 +8,72 @@ export const BentoOne = () => {
 
 
     const handleLogout = async () => {
+        console.log('\n🚪 [LOGOUT] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log('🚪 [LOGOUT] Iniciando proceso de cierre de sesión');
+        console.log(`🚪 [LOGOUT] Timestamp: ${new Date().toISOString()}`);
 
+        setIsLoading(true);
 
         try {
-            const URLBACKEND = 'https://backend-api-638220759621.us-central1.run.app';
-            // El endpoint de logout en tu FastAPI
-            const apiUrl = `${URLBACKEND}/api/auth/logout`;
+            // 🔑 IMPORTANTE: Usar la ruta API de Astro, no el backend directamente
+            // Astro es quien estableció la cookie, así que Astro debe eliminarla
+            const apiUrl = '/api/auth/logout';
+
+            console.log(`📤 [LOGOUT] Enviando petición a: ${apiUrl}`);
 
             const response = await fetch(apiUrl, {
                 method: 'POST',
-                // CRUCIAL: 'include' es necesario para que el navegador adjunte 
-                // la cookie HttpOnly al hacer la petición al backend.
-                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                // 🔑 IMPORTANTE: No seguir redirecciones automáticamente
+                redirect: 'manual',
+                credentials: 'same-origin',
             });
 
-            if (response.ok) {
+            console.log(`📨 [LOGOUT] Respuesta recibida - Status: ${response.status}`);
+            console.log(`📨 [LOGOUT] Response type: ${response.type}`);
 
+            // Verificar si fue exitoso (302 redirect o opaqueredirect)
+            if (response.type === 'opaqueredirect' || response.status === 0 || response.status === 302) {
+                console.log('✅ [LOGOUT] Logout exitoso - Cookie eliminada');
+                console.log('➡️  [LOGOUT] Redirigiendo a página de login');
+                console.log('🚪 [LOGOUT] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
-                // 🔑 Redirección obligatoria tras cerrar sesión
-                // Verificamos el entorno para evitar errores de SSR en Astro
-                if (typeof window !== 'undefined') {
+                // Forzar navegación al login
+                setTimeout(() => {
                     window.location.href = '/';
-                }
-            } else {
-                const data = await response.json();
-                setError(data.message || 'Error al cerrar sesión en el servidor.');
+                }, 100);
+
+                return;
             }
 
+            // Si no fue exitoso, intentar leer la respuesta
+            console.log('⚠️  [LOGOUT] Respuesta inesperada del servidor');
+
+            // Aún así, redirigir al login por seguridad
+            console.log('➡️  [LOGOUT] Redirigiendo a login por seguridad');
+            console.log('🚪 [LOGOUT] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 100);
+
         } catch (err) {
-            console.error('Error de red durante el logout:', err);
-            setError('Error de conexión. Inténtalo de nuevo.');
+            console.error('\n💥 [LOGOUT] Error durante el logout:');
+            console.error('   Error:', err instanceof Error ? err.message : String(err));
+            console.log('🚪 [LOGOUT] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+            // Aún con error, redirigir al login
+            console.log('➡️  [LOGOUT] Redirigiendo a login (fallback)');
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 100);
+
+            // Opcional: mostrar error al usuario
+            if (setError) {
+                setError('Error al cerrar sesión. Redirigiendo...');
+            }
         } finally {
             setIsLoading(false);
         }

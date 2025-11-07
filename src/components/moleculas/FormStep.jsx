@@ -165,7 +165,7 @@ function FormularioDenuncia({ isOpen, onClose }) {
       console.log("=".repeat(60));
 
       // Enviar al backend
-      URLBACKEND = 'https://backend-api-638220759621.us-central1.run.app';
+      const URLBACKEND = 'https://backend-api-638220759621.us-central1.run.app';
       const response = await fetch(`${URLBACKEND}/denuncias/crear`, {
         method: 'POST',
         credentials: 'include',
