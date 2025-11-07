@@ -2,8 +2,8 @@ import React from 'react'
 /* import { useNavigate } from 'react-router-dom'; */
 
 export const BentoOne = () => {
+    const [isLoading, setIsLoading] = React.useState(false);
 
-    /*  const navigate = useNavigate(); */
 
 
 
