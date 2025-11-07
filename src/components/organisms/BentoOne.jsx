@@ -2,7 +2,7 @@ import React from 'react'
 /* import { useNavigate } from 'react-router-dom'; */
 
 export const BentoOne = () => {
-    const [isLoading, setIsLoading] = React.useState(false);
+
 
 
 
@@ -12,7 +12,7 @@ export const BentoOne = () => {
         console.log('🚪 [LOGOUT] Iniciando proceso de cierre de sesión');
         console.log(`🚪 [LOGOUT] Timestamp: ${new Date().toISOString()}`);
 
-        setIsLoading(true);
+
 
         try {
             // 🔑 IMPORTANTE: Usar la ruta API de Astro, no el backend directamente
@@ -75,7 +75,7 @@ export const BentoOne = () => {
                 setError('Error al cerrar sesión. Redirigiendo...');
             }
         } finally {
-            setIsLoading(false);
+
         }
     };
     return (
