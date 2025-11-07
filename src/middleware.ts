@@ -80,6 +80,14 @@ const authMiddleware = defineMiddleware(async (context, next) => {
     console.log(`🌐 [MIDDLEWARE] Nueva petición: ${context.request.method} ${pathname}`);
     console.log(`🌐 [MIDDLEWARE] Timestamp: ${new Date().toISOString()}`);
 
+    // 🔥 CRÍTICO: Excluir rutas API del middleware
+    // Las rutas /api/* son endpoints internos y deben pasar sin verificación
+    if (pathname.startsWith('/api/')) {
+        console.log('🔓 [MIDDLEWARE] Ruta API detectada - permitiendo acceso directo');
+        console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
+        return next();
+    }
+
     // Verificar tipo de ruta
     const isAuthPath = AUTH_PATHS.includes(pathname);
     const isProtected = PROTECTED_PATHS.some(path =>
