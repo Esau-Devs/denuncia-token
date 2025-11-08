@@ -164,9 +164,7 @@ function FormularioDenuncia({ isOpen, onClose }) {
       console.log("Files:", formData.evidence.length, "archivo(s)");
       console.log("=".repeat(60));
 
-      // Enviar al backend
-      const URLBACKEND = 'https://backend-api-638220759621.us-central1.run.app';
-      const response = await fetch(`${URLBACKEND}/denuncias/crear`, {
+      const response = await fetch(`/api/denuncias/crear`, {
         method: 'POST',
         credentials: 'include',
         body: formDataToSend, // FormData, NO JSON
