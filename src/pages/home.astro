@@ -6,6 +6,7 @@ import FormStep from "@/components/moleculas/FormStep";
 import Footer from "@/components/atoms/Footer.astro";
 import "@/styles/global.css";
 import { BentoOne } from "@/components/organisms/BentoOne";
+import { BentoFour } from "@/components/organisms/BentoFour";
 ---
 
 <Layout title="Inicio">
@@ -387,140 +388,7 @@ import { BentoOne } from "@/components/organisms/BentoOne";
                 </div>
 
                 <!-- Bento 4 - Mis Denuncias -->
-                <div
-                    class="col-span-2 lg:col-span-1 rounded-xl p-6 bg-white border border-gray-200 shadow-lg"
-                >
-                    <h3
-                        class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"
-                    >
-                        <svg
-                            class="w-5 h-5 text-gray-700"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                            ></path>
-                        </svg>
-                        Mis Denuncias
-                    </h3>
-
-                    <div class="space-y-3">
-                        <div
-                            class="p-4 rounded-lg bg-[#e8f0fe] border-l-4 border-[#1a73e8] hover:shadow-md transition-shadow cursor-pointer"
-                        >
-                            <div
-                                class="flex items-start justify-between gap-3 mb-2"
-                            >
-                                <h4
-                                    class="text-sm font-semibold text-gray-900 flex-1"
-                                >
-                                    Ruido excesivo en horario nocturno
-                                </h4>
-                                <span
-                                    class="inline-flex items-center bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent bg-[#e8f0fe] text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap border border-[#0c3b87]"
-                                >
-                                    <span
-                                        class="w-2 h-2 bg-[#1a73e8] rounded-full mr-1"
-                                    ></span>
-                                    Pendiente
-                                </span>
-                            </div>
-                            <p class="text-xs text-gray-500">15 Oct 2024</p>
-                        </div>
-
-                        <div
-                            class="p-4 rounded-lg bg-[#f8f9fa] border-l-4 border-gray-400 hover:shadow-md transition-shadow cursor-pointer"
-                        >
-                            <div
-                                class="flex items-start justify-between gap-3 mb-2"
-                            >
-                                <h4
-                                    class="text-sm font-semibold text-gray-900 flex-1"
-                                >
-                                    Iluminación defectuosa en escalera
-                                </h4>
-                                <span
-                                    class="inline-flex items-center text-gray-600 bg-[#f8f9fa] text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap border border-gray-400"
-                                >
-                                    <svg
-                                        class="h-3 w-3 mr-1"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                    Resuelta
-                                </span>
-                            </div>
-                            <p class="text-xs text-gray-500">12 Oct 2024</p>
-                        </div>
-
-                        <div
-                            class="p-4 rounded-lg bg-[#e8f0fe] border-l-4 border-[#1a73e8] hover:shadow-md transition-shadow cursor-pointer"
-                        >
-                            <div
-                                class="flex items-start justify-between gap-3 mb-2"
-                            >
-                                <h4
-                                    class="text-sm font-semibold text-gray-900 flex-1"
-                                >
-                                    Fuga de agua en zona común
-                                </h4>
-                                <span
-                                    class="inline-flex items-center bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent bg-[#e8f0fe] text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap border border-[#0c3b87]"
-                                >
-                                    <span
-                                        class="w-2 h-2 bg-[#1a73e8] rounded-full mr-1 animate-pulse"
-                                    ></span>
-                                    En Proceso
-                                </span>
-                            </div>
-                            <p class="text-xs text-gray-500">08 Oct 2024</p>
-                        </div>
-
-                        <div
-                            class="p-4 rounded-lg bg-[#f8f9fa] border-l-4 border-gray-400 hover:shadow-md transition-shadow cursor-pointer"
-                        >
-                            <div
-                                class="flex items-start justify-between gap-3 mb-2"
-                            >
-                                <h4
-                                    class="text-sm font-semibold text-gray-900 flex-1"
-                                >
-                                    Basura acumulada en contenedores
-                                </h4>
-                                <span
-                                    class="inline-flex items-center text-gray-600 bg-[#f8f9fa] text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap border border-gray-400"
-                                >
-                                    <svg
-                                        class="h-3 w-3 mr-1"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                    Resuelta
-                                </span>
-                            </div>
-                            <p class="text-xs text-gray-500">05 Oct 2024</p>
-                        </div>
-                    </div>
-                </div>
+                <BentoFour client:load />
             </div>
         </main>
 
