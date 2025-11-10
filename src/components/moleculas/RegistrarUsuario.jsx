@@ -210,7 +210,7 @@ const RegistrarUsuario = () => {
     };
 
     const handleSubmit = async (e) => {
-        const URLBACKEND = 'https://backend-api-638220759621.us-central1.run.app';
+        const URLBACKEND = 'https://backend-api-638220759621.us-west1.run.app';
         e.preventDefault();
 
         if (!validateForm()) {

@@ -12,7 +12,7 @@ export const ACCESS_TOKEN_COOKIE_NAME = "session_token";
 /**
  * URL del backend de FastAPI
  */
-export const API_BASE_URL = 'https://backend-api-638220759621.us-central1.run.app';
+export const API_BASE_URL = 'https://backend-api-638220759621.us-west1.run.app';
 
 /**
  * Ruta para verificar el estado de la sesión en el backend.
