@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_URL = 'https://backend-api-638220759621.us-west1.run.app';
+
 
 export const BentoFour = () => {
     const [denuncias, setDenuncias] = useState([]);
@@ -15,30 +15,35 @@ export const BentoFour = () => {
     const fetchDenuncias = async () => {
         try {
             setLoading(true);
-            const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
 
-            if (!token) {
-                setError('No estás autenticado. Por favor inicia sesión.');
-                setLoading(false);
-                return;
-            }
+            console.log('✅ Haciendo petición a API con cookies...');
 
-            const response = await fetch(`${API_URL}/denuncias/mis-denuncias`, {
+            // 🔑 CAMBIO CRÍTICO: No buscar token, las cookies se envían automáticamente
+            const response = await fetch(`api/denuncias/mis-denuncias`, {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                credentials: 'include',
+                credentials: 'same-origin', // 🔥 CRÍTICO: Envía cookies automáticamente
             });
 
+            console.log('📡 Respuesta del servidor:', response.status);
+
             if (!response.ok) {
+                if (response.status === 401) {
+                    console.error('❌ No autenticado - redirigiendo al login...');
+                    // Redirigir al login si no está autenticado
+                    window.location.href = '/login';
+                    return;
+                }
                 throw new Error('Error al obtener las denuncias');
             }
 
             const data = await response.json();
+            console.log('✅ Denuncias obtenidas:', data.length);
             setDenuncias(data);
         } catch (err) {
+            console.error('💥 Error en fetchDenuncias:', err);
             setError(err.message);
         } finally {
             setLoading(false);
