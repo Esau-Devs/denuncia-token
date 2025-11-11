@@ -41,6 +41,7 @@ export const BentoFour = () => {
 
             const data = await response.json();
             console.log('✅ Denuncias obtenidas:', data.length);
+            console.log('Estructura de la primera denuncia:', data[0]);
             setDenuncias(data);
         } catch (err) {
             console.error('💥 Error en fetchDenuncias:', err);
@@ -203,7 +204,7 @@ export const BentoFour = () => {
             {/* Modal para ver detalles */}
             {selectedDenuncia && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 backdrop-blur-xs p-4"
                     onClick={() => setSelectedDenuncia(null)}
                 >
                     <div
@@ -215,7 +216,7 @@ export const BentoFour = () => {
                             <h2 className="text-xl font-bold text-gray-900">Detalles de la Denuncia</h2>
                             <button
                                 onClick={() => setSelectedDenuncia(null)}
-                                className="text-gray-400 hover:text-gray-600 transition-colors"
+                                className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
                             >
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -330,7 +331,7 @@ export const BentoFour = () => {
                         <div className="sticky bottom-0 bg-gray-50 px-6 py-4 border-t border-gray-200">
                             <button
                                 onClick={() => setSelectedDenuncia(null)}
-                                className="w-full bg-[#1a73e8] text-white py-2 px-4 rounded-lg hover:bg-[#1557b0] transition-colors font-medium"
+                                className="w-full bg-[#1a73e8] text-white py-2 px-4 rounded-lg hover:bg-[#1557b0] transition-colors font-medium cursor-pointer"
                             >
                                 Cerrar
                             </button>
