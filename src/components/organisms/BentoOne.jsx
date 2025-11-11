@@ -1,13 +1,17 @@
 import React from 'react'
-/* import { useNavigate } from 'react-router-dom'; */
+import { useFetchDenuncias } from '../../hooks/useFetchDenuncias';
 
 export const BentoOne = () => {
-
-
-
+    const { denuncias } = useFetchDenuncias();
+    const totalResueltas = denuncias.filter(d => d.estado === "resuelta").length;
+    const totalPendientes = denuncias.filter(d => d.estado === "pendiente").length;
+    const totalEnProceso = denuncias.filter(d => d.estado === "en proceso").length;
 
 
     const handleLogout = async () => {
+
+
+
         console.log('\n🚪 [LOGOUT] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
         console.log('🚪 [LOGOUT] Iniciando proceso de cierre de sesión');
         console.log(`🚪 [LOGOUT] Timestamp: ${new Date().toISOString()}`);
@@ -148,28 +152,28 @@ export const BentoOne = () => {
                     <p
                         className="text-3xl font-bold bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent"
                     >
-                        12
+                        {denuncias.length}
                     </p>
                     <p className="text-xs text-gray-600 mt-1">
                         Total Denuncias
                     </p>
                 </div>
                 <div className="text-center p-3 bg-[#f8f9fa] rounded-lg">
-                    <p className="text-3xl font-bold text-gray-600">8</p>
+                    <p className="text-3xl font-bold text-gray-600">{totalResueltas}</p>
                     <p className="text-xs text-gray-500 mt-1">Resueltas</p>
                 </div>
                 <div className="text-center p-3 bg-[#e8f0fe] rounded-lg">
                     <p
                         className="text-3xl font-bold bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent"
                     >
-                        3
+                        {totalPendientes}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">Pendientes</p>
                 </div>
                 <div className="text-center p-3 bg-[#e8f0fe] rounded-lg">
                     <p
                         className="text-3xl font-bold bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent">
-                        1
+                        {totalEnProceso}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">En Proceso</p>
                 </div>
