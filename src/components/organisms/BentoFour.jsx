@@ -70,12 +70,6 @@ export const BentoFour = () => {
                 badge: 'text-gray-600 bg-[#f8f9fa] border-gray-400',
                 dot: null,
             },
-            rechazada: {
-                bg: 'bg-red-50',
-                border: 'border-red-400',
-                badge: 'text-red-600 bg-red-50 border-red-400',
-                dot: 'bg-red-500',
-            },
         };
         return styles[estado?.toLowerCase()] || styles.pendiente;
     };
@@ -274,7 +268,7 @@ export const BentoFour = () => {
                             </div>
 
                             {/* Evidencias */}
-                            {selectedDenuncia.evidencias && selectedDenuncia.evidencias.length > 0 && (
+                            {Array.isArray(selectedDenuncia.evidencias) && selectedDenuncia.evidencias.length > 0 && (
                                 <div>
                                     <p className="text-sm text-gray-500 mb-3">Evidencias ({selectedDenuncia.evidencias.length})</p>
                                     <div className="grid grid-cols-2 gap-3">
