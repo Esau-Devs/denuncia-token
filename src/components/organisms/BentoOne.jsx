@@ -126,12 +126,12 @@ export const BentoOne = () => {
                     className="h-16 w-16 rounded-full overflow-hidden bg-gradient-to-br from-[#2a3b5d] to-[#0c3b87] flex items-center justify-center flex-shrink-0"
                 >
                     <span className="text-white text-2xl font-bold">
-                        {datosUsuario?.nombre ? datosUsuario.nombre.substring(0, 2).toUpperCase() : 'MG'}
+                        {datosUsuario?.nombre_completo ? datosUsuario.nombre_completo.substring(0, 2).toUpperCase() : 'NB'}
                     </span>
                 </div>
                 <div className="flex-1 min-w-0">
                     <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                        {datosUsuario?.nombre || 'Cargando...'}
+                        {datosUsuario?.nombre_completo || 'Cargando...'}
                     </h2>
                     <div className="flex gap-2 flex-wrap">
                         <span className="px-3 py-1 rounded-full text-xs bg-green-100 text-green-700 font-medium">
@@ -157,7 +157,7 @@ export const BentoOne = () => {
                         ></path>
                     </svg>
                     <span className="font-medium">ID:</span>
-                    <span className="text-gray-600">{datosUsuario?.id || 'Cargando...'}</span>
+                    <span className="text-gray-600">{datosUsuario?.dui || 'Cargando...'}</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <svg
@@ -195,7 +195,7 @@ export const BentoOne = () => {
                     </svg>
                     <div className="flex lg:flex-row gap-2">
                         <span className="font-medium">Miembro desde:</span>
-                        <span className="text-gray-600">{datosUsuario?.fechaCreacion || 'Cargando...'}</span>
+                        <span className="text-gray-600">{datosUsuario?.fecha_registro || 'Cargando...'}</span>
                     </div>
                 </div>
             </div>
