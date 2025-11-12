@@ -5,46 +5,45 @@ export function useFetchDenuncias() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-
-    const fetchDenuncias = async () => {
-        try {
-            setLoading(true);
-
-            console.log('✅ Haciendo petición a API con cookies...');
-
-            const response = await fetch(`/api/denuncias/mis-denuncias`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin', // 🔥 Envía cookies automáticamente
-            });
-
-
-
-            if (!response.ok) {
-                if (response.status === 401) {
-
-                    window.location.href = '/login';
-                    return;
-                }
-                throw new Error('Error al obtener las denuncias');
-            }
-
-            const data = await response.json();
-
-            setDenuncias(data);
-        } catch (err) {
-
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
+        const fetchDenuncias = async () => {
+            try {
+                setLoading(true);
+
+                console.log('✅ Haciendo petición a API con cookies...');
+
+                const response = await fetch(`/api/denuncias/mis-denuncias`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin', // 🔥 Envía cookies automáticamente
+                });
+
+
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+
+                        window.location.href = '/login';
+                        return;
+                    }
+                    throw new Error('Error al obtener las denuncias');
+                }
+
+                const data = await response.json();
+
+                setDenuncias(data);
+            } catch (err) {
+
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchDenuncias();
-    }, [fetchDenuncias]);
+    }, []);
 
     return { denuncias, loading, error };
 }
