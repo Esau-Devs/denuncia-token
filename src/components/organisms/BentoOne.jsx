@@ -1,5 +1,4 @@
-import React, { use } from 'react'
-import { useEffect } from 'react';
+import React, { useEffect } from 'react' // ✅ IMPORTAR useEffect
 import { useFetchDenuncias } from '../../hooks/useFetchDenuncias';
 
 export const BentoOne = () => {
@@ -9,41 +8,70 @@ export const BentoOne = () => {
     const totalPendientes = denuncias.filter(d => d.estado === "pendiente").length;
     const totalEnProceso = denuncias.filter(d => d.estado === "en proceso").length;
 
-
     useEffect(() => {
+        console.log('\n👤 [USER INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log('👤 [USER INFO] Iniciando carga de datos de usuario');
+        console.log(`👤 [USER INFO] Timestamp: ${new Date().toISOString()}`);
 
         const fetchDatosUsuario = async () => {
+            try {
+                const apiUrl = '/api/usuario/me';
+                console.log(`📤 [USER INFO] Petición a: ${apiUrl}`);
 
-            const response = await fetch('/api/usuario/me', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'same-origin', // 🔥 Envía cookies automáticamente
-            });
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin',
+                });
 
-            const data = await response.json();
-            setDatosUsuario(data);
+                console.log(`📨 [USER INFO] Status: ${response.status} ${response.statusText}`);
+                console.log(`📨 [USER INFO] Headers:`, Object.fromEntries(response.headers.entries()));
+
+                // Intentar leer la respuesta como texto primero
+                const responseText = await response.text();
+                console.log(`📨 [USER INFO] Response body (raw):`, responseText);
+
+                if (!response.ok) {
+                    console.error(`❌ [USER INFO] Error HTTP ${response.status}`);
+                    console.error(`❌ [USER INFO] Response:`, responseText);
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+
+                // Intentar parsear el JSON
+                let data;
+                try {
+                    data = responseText ? JSON.parse(responseText) : {};
+                    console.log('✅ [USER INFO] Datos parseados correctamente:', data);
+                } catch (parseError) {
+                    console.error('❌ [USER INFO] Error al parsear JSON:', parseError);
+                    console.error('❌ [USER INFO] Texto recibido:', responseText);
+                    throw new Error('Respuesta del servidor no es JSON válido');
+                }
+
+                setDatosUsuario(data);
+                console.log('✅ [USER INFO] Estado actualizado correctamente');
+                console.log('👤 [USER INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+            } catch (error) {
+                console.error('\n💥 [USER INFO] Error al cargar datos:');
+                console.error('   Error:', error instanceof Error ? error.message : String(error));
+                console.error('   Stack:', error instanceof Error ? error.stack : 'N/A');
+                console.log('👤 [USER INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+            }
         };
 
         fetchDatosUsuario();
     }, []);
 
     const handleLogout = async () => {
-
-
-
         console.log('\n🚪 [LOGOUT] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
         console.log('🚪 [LOGOUT] Iniciando proceso de cierre de sesión');
         console.log(`🚪 [LOGOUT] Timestamp: ${new Date().toISOString()}`);
 
-
-
         try {
-            // 🔑 IMPORTANTE: Usar la ruta API de Astro, no el backend directamente
-            // Astro es quien estableció la cookie, así que Astro debe eliminarla
             const apiUrl = '/api/auth/logout';
-
             console.log(`📤 [LOGOUT] Enviando petición a: ${apiUrl}`);
 
             const response = await fetch(apiUrl, {
@@ -51,7 +79,6 @@ export const BentoOne = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                // 🔑 IMPORTANTE: No seguir redirecciones automáticamente
                 redirect: 'manual',
                 credentials: 'same-origin',
             });
@@ -59,24 +86,18 @@ export const BentoOne = () => {
             console.log(`📨 [LOGOUT] Respuesta recibida - Status: ${response.status}`);
             console.log(`📨 [LOGOUT] Response type: ${response.type}`);
 
-            // Verificar si fue exitoso (302 redirect o opaqueredirect)
             if (response.type === 'opaqueredirect' || response.status === 0 || response.status === 302) {
                 console.log('✅ [LOGOUT] Logout exitoso - Cookie eliminada');
                 console.log('➡️  [LOGOUT] Redirigiendo a página de login');
                 console.log('🚪 [LOGOUT] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
-                // Forzar navegación al login
                 setTimeout(() => {
                     window.location.href = '/';
                 }, 100);
-
                 return;
             }
 
-            // Si no fue exitoso, intentar leer la respuesta
             console.log('⚠️  [LOGOUT] Respuesta inesperada del servidor');
-
-            // Aún así, redirigir al login por seguridad
             console.log('➡️  [LOGOUT] Redirigiendo a login por seguridad');
             console.log('🚪 [LOGOUT] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
@@ -89,20 +110,13 @@ export const BentoOne = () => {
             console.error('   Error:', err instanceof Error ? err.message : String(err));
             console.log('🚪 [LOGOUT] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
-            // Aún con error, redirigir al login
             console.log('➡️  [LOGOUT] Redirigiendo a login (fallback)');
             setTimeout(() => {
                 window.location.href = '/';
             }, 100);
-
-            // Opcional: mostrar error al usuario
-            if (setError) {
-                setError('Error al cerrar sesión. Redirigiendo...');
-            }
-        } finally {
-
         }
     };
+
     return (
         <div
             className="col-span-2 lg:col-span-1 md:row-span-2 bg-white shadow-lg rounded-xl p-6 md:p-8 hover:shadow-xl transition-shadow"
@@ -111,17 +125,18 @@ export const BentoOne = () => {
                 <div
                     className="h-16 w-16 rounded-full overflow-hidden bg-gradient-to-br from-[#2a3b5d] to-[#0c3b87] flex items-center justify-center flex-shrink-0"
                 >
-                    <span className="text-white text-2xl font-bold">MG </span>
+                    <span className="text-white text-2xl font-bold">
+                        {datosUsuario?.nombre ? datosUsuario.nombre.substring(0, 2).toUpperCase() : 'MG'}
+                    </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                    <h2
-                        className="text-xl font-semibold text-gray-900 mb-2"
-                    >
-                        {datosUsuario.nombre || 'Nombre de Usuario'}
+                    <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                        {datosUsuario?.nombre || 'Cargando...'}
                     </h2>
                     <div className="flex gap-2 flex-wrap">
-                        <span
-                            className="px-3 py-1 rounded-full text-xs bg-green-100 text-green-700 font-medium">Activo</span>
+                        <span className="px-3 py-1 rounded-full text-xs bg-green-100 text-green-700 font-medium">
+                            Activo
+                        </span>
                     </div>
                 </div>
             </div>
@@ -142,7 +157,7 @@ export const BentoOne = () => {
                         ></path>
                     </svg>
                     <span className="font-medium">ID:</span>
-                    <span className="text-gray-600">{datosUsuario.id || 'ID de Usuario'}</span>
+                    <span className="text-gray-600">{datosUsuario?.id || 'Cargando...'}</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <svg
@@ -159,8 +174,8 @@ export const BentoOne = () => {
                         ></path>
                     </svg>
                     <div className="flex lg:flex-row gap-2">
-                        <span className="font-medium">Genero:</span>
-                        <span className="text-gray-600"> {datosUsuario.genero || 'Género de Usuario'}</span>
+                        <span className="font-medium">Género:</span>
+                        <span className="text-gray-600">{datosUsuario?.genero || 'Cargando...'}</span>
                     </div>
                 </div>
 
@@ -180,46 +195,36 @@ export const BentoOne = () => {
                     </svg>
                     <div className="flex lg:flex-row gap-2">
                         <span className="font-medium">Miembro desde:</span>
-                        <span className="text-gray-600"> {datosUsuario.fechaCreacion || 'Fecha de Creación'}</span>
+                        <span className="text-gray-600">{datosUsuario?.fechaCreacion || 'Cargando...'}</span>
                     </div>
                 </div>
             </div>
 
-            <div
-                className="mt-6 pt-6 border-t border-gray-200 grid md:grid-cols-2 grid-cols-1 gap-4"
-            >
+            <div className="mt-6 pt-6 border-t border-gray-200 grid md:grid-cols-2 grid-cols-1 gap-4">
                 <div className="text-center p-3 bg-blue-50 rounded-lg">
-                    <p
-                        className="text-3xl font-bold bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent"
-                    >
+                    <p className="text-3xl font-bold bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent">
                         {denuncias.length}
                     </p>
-                    <p className="text-xs text-gray-600 mt-1">
-                        Total Denuncias
-                    </p>
+                    <p className="text-xs text-gray-600 mt-1">Total Denuncias</p>
                 </div>
                 <div className="text-center p-3 bg-[#f8f9fa] rounded-lg">
                     <p className="text-3xl font-bold text-gray-600">{totalResueltas}</p>
                     <p className="text-xs text-gray-500 mt-1">Resueltas</p>
                 </div>
                 <div className="text-center p-3 bg-[#e8f0fe] rounded-lg">
-                    <p
-                        className="text-3xl font-bold bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent"
-                    >
+                    <p className="text-3xl font-bold bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent">
                         {totalPendientes}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">Pendientes</p>
                 </div>
                 <div className="text-center p-3 bg-[#e8f0fe] rounded-lg">
-                    <p
-                        className="text-3xl font-bold bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent">
+                    <p className="text-3xl font-bold bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent">
                         {totalEnProceso}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">En Proceso</p>
                 </div>
             </div>
 
-            {/* Botón de cerrar sesión */}
             <div className="flex justify-center mt-4">
                 <button
                     onClick={handleLogout}
