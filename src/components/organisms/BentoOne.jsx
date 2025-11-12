@@ -1,4 +1,5 @@
 import React, { use } from 'react'
+import { useEffect } from 'react';
 import { useFetchDenuncias } from '../../hooks/useFetchDenuncias';
 
 export const BentoOne = () => {
