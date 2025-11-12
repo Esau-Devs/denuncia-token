@@ -20,11 +20,11 @@ export function useFetchDenuncias() {
                     credentials: 'same-origin', // 🔥 Envía cookies automáticamente
                 });
 
-                console.log('📡 Respuesta del servidor:', response.status);
+
 
                 if (!response.ok) {
                     if (response.status === 401) {
-                        console.error('❌ No autenticado - redirigiendo al login...');
+
                         window.location.href = '/login';
                         return;
                     }
@@ -32,10 +32,10 @@ export function useFetchDenuncias() {
                 }
 
                 const data = await response.json();
-                console.log('✅ Denuncias obtenidas:', data.length);
+
                 setDenuncias(data);
             } catch (err) {
-                console.error('💥 Error en fetchDenuncias:', err);
+
                 setError(err.message);
             } finally {
                 setLoading(false);

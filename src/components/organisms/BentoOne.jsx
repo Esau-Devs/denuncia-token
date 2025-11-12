@@ -26,15 +26,14 @@ export const BentoOne = () => {
                     credentials: 'same-origin',
                 });
 
-                console.log(`📨 [USER INFO] Status: ${response.status} ${response.statusText}`);
-                console.log(`📨 [USER INFO] Headers:`, Object.fromEntries(response.headers.entries()));
+
 
                 // Intentar leer la respuesta como texto primero
                 const responseText = await response.text();
                 console.log(`📨 [USER INFO] Response body (raw):`, responseText);
 
                 if (!response.ok) {
-                    console.error(`❌ [USER INFO] Error HTTP ${response.status}`);
+
                     console.error(`❌ [USER INFO] Response:`, responseText);
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }
@@ -43,7 +42,7 @@ export const BentoOne = () => {
                 let data;
                 try {
                     data = responseText ? JSON.parse(responseText) : {};
-                    console.log('✅ [USER INFO] Datos parseados correctamente:', data);
+
                 } catch (parseError) {
                     console.error('❌ [USER INFO] Error al parsear JSON:', parseError);
                     console.error('❌ [USER INFO] Texto recibido:', responseText);
@@ -51,14 +50,13 @@ export const BentoOne = () => {
                 }
 
                 setDatosUsuario(data);
-                console.log('✅ [USER INFO] Estado actualizado correctamente');
-                console.log('👤 [USER INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
 
             } catch (error) {
                 console.error('\n💥 [USER INFO] Error al cargar datos:');
                 console.error('   Error:', error instanceof Error ? error.message : String(error));
                 console.error('   Stack:', error instanceof Error ? error.stack : 'N/A');
-                console.log('👤 [USER INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
             }
         };
 
@@ -66,13 +64,11 @@ export const BentoOne = () => {
     }, []);
 
     const handleLogout = async () => {
-        console.log('\n🚪 [LOGOUT] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log('🚪 [LOGOUT] Iniciando proceso de cierre de sesión');
-        console.log(`🚪 [LOGOUT] Timestamp: ${new Date().toISOString()}`);
+
 
         try {
             const apiUrl = '/api/auth/logout';
-            console.log(`📤 [LOGOUT] Enviando petición a: ${apiUrl}`);
+
 
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -83,13 +79,10 @@ export const BentoOne = () => {
                 credentials: 'same-origin',
             });
 
-            console.log(`📨 [LOGOUT] Respuesta recibida - Status: ${response.status}`);
-            console.log(`📨 [LOGOUT] Response type: ${response.type}`);
+
 
             if (response.type === 'opaqueredirect' || response.status === 0 || response.status === 302) {
-                console.log('✅ [LOGOUT] Logout exitoso - Cookie eliminada');
-                console.log('➡️  [LOGOUT] Redirigiendo a página de login');
-                console.log('🚪 [LOGOUT] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
 
                 setTimeout(() => {
                     window.location.href = '/';
@@ -97,9 +90,7 @@ export const BentoOne = () => {
                 return;
             }
 
-            console.log('⚠️  [LOGOUT] Respuesta inesperada del servidor');
-            console.log('➡️  [LOGOUT] Redirigiendo a login por seguridad');
-            console.log('🚪 [LOGOUT] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
 
             setTimeout(() => {
                 window.location.href = '/';
@@ -108,9 +99,9 @@ export const BentoOne = () => {
         } catch (err) {
             console.error('\n💥 [LOGOUT] Error durante el logout:');
             console.error('   Error:', err instanceof Error ? err.message : String(err));
-            console.log('🚪 [LOGOUT] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
-            console.log('➡️  [LOGOUT] Redirigiendo a login (fallback)');
+
+
             setTimeout(() => {
                 window.location.href = '/';
             }, 100);
@@ -195,7 +186,15 @@ export const BentoOne = () => {
                     </svg>
                     <div className="flex lg:flex-row gap-2">
                         <span className="font-medium">Miembro desde:</span>
-                        <span className="text-gray-600">{datosUsuario?.fecha_registro || 'Cargando...'}</span>
+                        <span className="text-gray-600">
+                            {datosUsuario?.fecha_registro
+                                ? new Date(datosUsuario.fecha_registro).toLocaleDateString('es-ES', {
+                                    day: 'numeric',
+                                    month: 'long',
+                                    year: 'numeric',
+                                })
+                                : 'Cargando...'}
+                        </span>
                     </div>
                 </div>
             </div>
