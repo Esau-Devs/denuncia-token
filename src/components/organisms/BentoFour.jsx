@@ -69,7 +69,7 @@ export const BentoFour = () => {
 
     return (
         <>
-        //max-h-[500px] overflow-hidden flex flex-col
+            {/*max-h-[500px] overflow-hidden flex flex-col*/}
             <div className="col-span-2 lg:col-span-1 rounded-xl p-6 bg-white border border-gray-200 shadow-lg max-h-[500px] overflow-hidden flex flex-col">
                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                     <svg
@@ -107,8 +107,9 @@ export const BentoFour = () => {
                         <p className="text-sm mt-2">Crea tu primera denuncia para comenzar</p>
                     </div>
                 ) : (
-                    //max-h-[500px]
+
                     <div className="space-y-3 overflow-y-auto">
+                        {/* Lista de denuncias max-h-[500px] */}
                         {denuncias.map((denuncia) => {
                             const estilo = getEstadoStyle(denuncia.estado);
                             return (
@@ -158,146 +159,148 @@ export const BentoFour = () => {
                         })}
                     </div>
                 )}
-            </div>
+            </div >
 
             {/* Modal para ver detalles */}
-            {selectedDenuncia && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 backdrop-blur-xs p-4 "
-                    onClick={() => setSelectedDenuncia(null)}
-                >
+            {
+                selectedDenuncia && (
                     <div
-                        className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
-                        onClick={(e) => e.stopPropagation()}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 backdrop-blur-xs p-4 "
+                        onClick={() => setSelectedDenuncia(null)}
                     >
-                        {/* Header */}
-                        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-gray-900">Detalles de la Denuncia</h2>
-                            <button
-                                onClick={() => setSelectedDenuncia(null)}
-                                className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        {/* Content */}
-                        <div className="p-6 space-y-6">
-                            {/* Estado */}
-                            <div className="flex items-center justify-between pb-4 border-b">
-                                <div>
-                                    <p className="text-sm text-gray-500">Estado</p>
-                                    <p className="text-lg font-semibold text-gray-900 capitalize">
-                                        {selectedDenuncia.estado}
-                                    </p>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-sm text-gray-500">Fecha</p>
-                                    <p className="text-lg font-semibold text-gray-900">
-                                        {formatDate(selectedDenuncia.fecha_creacion)}
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Categoría */}
-                            <div>
-                                <p className="text-sm text-gray-500 mb-1">Categoría</p>
-                                <div className="inline-flex items-center bg-[#e8f0fe] text-[#1a73e8] px-3 py-1 rounded-full text-sm font-medium">
-                                    {selectedDenuncia.categoria}
-                                </div>
-                            </div>
-
-                            {/* Ubicación */}
-                            <div>
-                                <p className="text-sm text-gray-500 mb-2">Ubicación</p>
-                                <div className="flex items-start gap-2">
-                                    <svg className="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <div
+                            className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Header */}
+                            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+                                <h2 className="text-xl font-bold text-gray-900">Detalles de la Denuncia</h2>
+                                <button
+                                    onClick={() => setSelectedDenuncia(null)}
+                                    className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
-                                    <p className="text-gray-900">{selectedDenuncia.ubicacion}</p>
-                                </div>
+                                </button>
                             </div>
 
-                            {/* Descripción */}
-                            <div>
-                                <p className="text-sm text-gray-500 mb-2">Descripción</p>
-                                <p className="text-gray-900 leading-relaxed">{selectedDenuncia.descripcion}</p>
-                            </div>
-
-                            {/* Evidencias */}
-                            {Array.isArray(selectedDenuncia.evidencias) && selectedDenuncia.evidencias.length > 0 && (
-                                <div>
-                                    <p className="text-sm text-gray-500 mb-3">Evidencias ({selectedDenuncia.evidencias.length})</p>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        {selectedDenuncia.evidencias.map((url, index) => {
-                                            const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
-                                            const isPDF = /\.pdf$/i.test(url);
-                                            const isAudio = /\.(mp3|wav|ogg)$/i.test(url);
-
-                                            return (
-                                                <div key={index} className="relative group">
-                                                    {isImage ? (
-                                                        <a href={url} target="_blank" rel="noopener noreferrer" className="block">
-                                                            <img
-                                                                src={url}
-                                                                alt={`Evidencia ${index + 1}`}
-                                                                className="w-full h-32 object-cover rounded-lg border border-gray-200 hover:opacity-75 transition-opacity"
-                                                            />
-                                                        </a>
-                                                    ) : (
-                                                        <a
-                                                            href={url}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="flex flex-col items-center justify-center h-32 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
-                                                        >
-                                                            {isPDF ? (
-                                                                <svg className="w-12 h-12 text-red-500 mb-2" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
-                                                                </svg>
-                                                            ) : isAudio ? (
-                                                                <svg className="w-12 h-12 text-blue-500 mb-2" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
-                                                                </svg>
-                                                            ) : (
-                                                                <svg className="w-12 h-12 text-gray-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
-                                                                </svg>
-                                                            )}
-                                                            <p className="text-xs text-gray-600 font-medium">
-                                                                {isPDF ? 'Documento PDF' : isAudio ? 'Audio' : 'Archivo'}
-                                                            </p>
-                                                        </a>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
+                            {/* Content */}
+                            <div className="p-6 space-y-6">
+                                {/* Estado */}
+                                <div className="flex items-center justify-between pb-4 border-b">
+                                    <div>
+                                        <p className="text-sm text-gray-500">Estado</p>
+                                        <p className="text-lg font-semibold text-gray-900 capitalize">
+                                            {selectedDenuncia.estado}
+                                        </p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-sm text-gray-500">Fecha</p>
+                                        <p className="text-lg font-semibold text-gray-900">
+                                            {formatDate(selectedDenuncia.fecha_creacion)}
+                                        </p>
                                     </div>
                                 </div>
-                            )}
 
-                            {/* ID de seguimiento */}
-                            <div className="pt-4 border-t">
-                                <p className="text-xs text-gray-500">ID de seguimiento</p>
-                                <p className="text-xs font-mono text-gray-600 break-all">{selectedDenuncia.id}</p>
+                                {/* Categoría */}
+                                <div>
+                                    <p className="text-sm text-gray-500 mb-1">Categoría</p>
+                                    <div className="inline-flex items-center bg-[#e8f0fe] text-[#1a73e8] px-3 py-1 rounded-full text-sm font-medium">
+                                        {selectedDenuncia.categoria}
+                                    </div>
+                                </div>
+
+                                {/* Ubicación */}
+                                <div>
+                                    <p className="text-sm text-gray-500 mb-2">Ubicación</p>
+                                    <div className="flex items-start gap-2">
+                                        <svg className="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                        <p className="text-gray-900">{selectedDenuncia.ubicacion}</p>
+                                    </div>
+                                </div>
+
+                                {/* Descripción */}
+                                <div>
+                                    <p className="text-sm text-gray-500 mb-2">Descripción</p>
+                                    <p className="text-gray-900 leading-relaxed">{selectedDenuncia.descripcion}</p>
+                                </div>
+
+                                {/* Evidencias */}
+                                {Array.isArray(selectedDenuncia.evidencias) && selectedDenuncia.evidencias.length > 0 && (
+                                    <div>
+                                        <p className="text-sm text-gray-500 mb-3">Evidencias ({selectedDenuncia.evidencias.length})</p>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {selectedDenuncia.evidencias.map((url, index) => {
+                                                const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
+                                                const isPDF = /\.pdf$/i.test(url);
+                                                const isAudio = /\.(mp3|wav|ogg)$/i.test(url);
+
+                                                return (
+                                                    <div key={index} className="relative group">
+                                                        {isImage ? (
+                                                            <a href={url} target="_blank" rel="noopener noreferrer" className="block">
+                                                                <img
+                                                                    src={url}
+                                                                    alt={`Evidencia ${index + 1}`}
+                                                                    className="w-full h-32 object-cover rounded-lg border border-gray-200 hover:opacity-75 transition-opacity"
+                                                                />
+                                                            </a>
+                                                        ) : (
+                                                            <a
+                                                                href={url}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="flex flex-col items-center justify-center h-32 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors"
+                                                            >
+                                                                {isPDF ? (
+                                                                    <svg className="w-12 h-12 text-red-500 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                ) : isAudio ? (
+                                                                    <svg className="w-12 h-12 text-blue-500 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
+                                                                    </svg>
+                                                                ) : (
+                                                                    <svg className="w-12 h-12 text-gray-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                )}
+                                                                <p className="text-xs text-gray-600 font-medium">
+                                                                    {isPDF ? 'Documento PDF' : isAudio ? 'Audio' : 'Archivo'}
+                                                                </p>
+                                                            </a>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* ID de seguimiento */}
+                                <div className="pt-4 border-t">
+                                    <p className="text-xs text-gray-500">ID de seguimiento</p>
+                                    <p className="text-xs font-mono text-gray-600 break-all">{selectedDenuncia.id}</p>
+                                </div>
+                            </div>
+
+                            {/* Footer */}
+                            <div className="sticky bottom-0 bg-gray-50 px-6 py-4 border-t border-gray-200">
+                                <button
+                                    onClick={() => setSelectedDenuncia(null)}
+                                    className="w-full bg-[#1a73e8] text-white py-2 px-4 rounded-lg hover:bg-[#1557b0] transition-colors font-medium cursor-pointer"
+                                >
+                                    Cerrar
+                                </button>
                             </div>
                         </div>
-
-                        {/* Footer */}
-                        <div className="sticky bottom-0 bg-gray-50 px-6 py-4 border-t border-gray-200">
-                            <button
-                                onClick={() => setSelectedDenuncia(null)}
-                                className="w-full bg-[#1a73e8] text-white py-2 px-4 rounded-lg hover:bg-[#1557b0] transition-colors font-medium cursor-pointer"
-                            >
-                                Cerrar
-                            </button>
-                        </div>
                     </div>
-                </div>
-            )}
+                )
+            }
         </>
     );
 }
