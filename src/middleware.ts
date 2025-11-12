@@ -4,6 +4,7 @@ import { ACCESS_TOKEN_COOKIE_NAME } from './constants';
 const URLAPI = 'https://backend-api-638220759621.us-central1.run.app';
 const AUTH_VERIFY_URL = `${URLAPI}/api/auth/verify-session`;
 const LOGIN_PATH = '/';
+const HOME_PATH = '/home';
 const PROTECTED_PATHS = ['/home'];
 const AUTH_PATHS = ['/', '/registrar'];
 
@@ -81,7 +82,6 @@ const authMiddleware = defineMiddleware(async (context, next) => {
     console.log(`🌐 [MIDDLEWARE] Timestamp: ${new Date().toISOString()}`);
 
     // 🔥 CRÍTICO: Excluir rutas API del middleware
-    // Las rutas /api/* son endpoints internos y deben pasar sin verificación
     if (pathname.startsWith('/api/')) {
         console.log('🔓 [MIDDLEWARE] Ruta API detectada - permitiendo acceso directo');
         console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
@@ -108,56 +108,59 @@ const authMiddleware = defineMiddleware(async (context, next) => {
         console.log('✅ [MIDDLEWARE] Cookie encontrada en la petición');
     } else {
         console.log('❌ [MIDDLEWARE] Cookie NO encontrada en la petición');
-        console.log('   (Intentando acceder sin cookie de sesión)');
     }
 
     // Verificar autenticación
     const isAuthenticated = await verifySession(sessionToken, pathname);
     console.log(`\n🔒 [MIDDLEWARE] Estado de autenticación: ${isAuthenticated ? '✅ AUTENTICADO' : '❌ NO AUTENTICADO'}`);
 
-    // Manejar rutas desconocidas
-    if (!isKnownRoute) {
-        console.log('⚠️  [MIDDLEWARE] Ruta desconocida detectada');
-        if (isAuthenticated) {
-            console.log('➡️  [MIDDLEWARE] Redirigiendo usuario autenticado a /home');
-            console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
-            return context.redirect('/home', 302);
-        } else {
-            console.log('➡️  [MIDDLEWARE] Redirigiendo usuario no autenticado a /');
-            console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
-            return context.redirect(LOGIN_PATH, 302);
-        }
-    }
+    // 🎯 NUEVA LÓGICA SIMPLIFICADA
 
-    // Usuario AUTENTICADO
+    // Si está AUTENTICADO
     if (isAuthenticated) {
-        console.log('✅ [MIDDLEWARE] Usuario autenticado procesando ruta...');
+        console.log('✅ [MIDDLEWARE] Usuario autenticado detectado');
 
+        // Si intenta acceder a rutas de auth (login/registrar), redirigir a home
         if (isAuthPath) {
-            console.log('➡️  [MIDDLEWARE] Usuario autenticado intentando acceder a ruta de auth');
-            console.log('   Redirigiendo a /home (ya está logueado)');
+            console.log('➡️  [MIDDLEWARE] Usuario autenticado en ruta de auth → Redirigiendo a /home');
             console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
-            return context.redirect('/home', 302);
+            return context.redirect(HOME_PATH, 302);
         }
 
-        console.log('✅ [MIDDLEWARE] Permitiendo acceso a ruta protegida');
+        // Si es una ruta conocida y válida (protegida), permitir acceso
+        if (isProtected) {
+            console.log('✅ [MIDDLEWARE] Permitiendo acceso a ruta protegida');
+            console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
+            return next();
+        }
+
+        // Si es cualquier otra ruta desconocida, redirigir a home
+        console.log('⚠️  [MIDDLEWARE] Ruta desconocida con usuario autenticado → Redirigiendo a /home');
         console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
-        return next();
+        return context.redirect(HOME_PATH, 302);
     }
 
-    // Usuario NO AUTENTICADO
-    console.log('❌ [MIDDLEWARE] Usuario NO autenticado procesando ruta...');
+    // Si NO está AUTENTICADO
+    console.log('❌ [MIDDLEWARE] Usuario NO autenticado detectado');
 
+    // Si intenta acceder a ruta protegida, redirigir a login
     if (isProtected) {
-        console.log('➡️  [MIDDLEWARE] Intentando acceder a ruta protegida sin autenticación');
-        console.log('   Redirigiendo a / (login)');
+        console.log('➡️  [MIDDLEWARE] Intento de acceso a ruta protegida sin auth → Redirigiendo a /');
         console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
         return context.redirect(LOGIN_PATH, 302);
     }
 
-    console.log('✅ [MIDDLEWARE] Permitiendo acceso a ruta de autenticación');
+    // Si es ruta de auth (login/registrar), permitir acceso
+    if (isAuthPath) {
+        console.log('✅ [MIDDLEWARE] Permitiendo acceso a ruta de autenticación');
+        console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
+        return next();
+    }
+
+    // Cualquier otra ruta desconocida sin autenticación → login
+    console.log('⚠️  [MIDDLEWARE] Ruta desconocida sin autenticación → Redirigiendo a /');
     console.log('🌐 [MIDDLEWARE] ═══════════════════════════════════════════\n');
-    return next();
+    return context.redirect(LOGIN_PATH, 302);
 });
 
 export const onRequest = sequence(authMiddleware);
