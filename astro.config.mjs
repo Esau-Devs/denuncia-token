@@ -10,9 +10,12 @@ import vercel from "@astrojs/vercel";
 export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
+
   },
   output: 'server',
   integrations: [react()],
-  adapter: vercel(),
+  adapter: vercel({
+    edgeMiddleware: true,
+  }),
 
 });
