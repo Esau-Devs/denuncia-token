@@ -69,7 +69,8 @@ export const BentoFour = () => {
 
     return (
         <>
-            <div className="col-span-2 lg:col-span-1 rounded-xl p-6 bg-white border border-gray-200 shadow-lg">
+        //max-h-[500px] overflow-hidden flex flex-col
+            <div className="col-span-2 lg:col-span-1 rounded-xl p-6 bg-white border border-gray-200 shadow-lg max-h-[500px] overflow-hidden flex flex-col">
                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                     <svg
                         className="w-5 h-5 text-gray-700"
@@ -106,7 +107,8 @@ export const BentoFour = () => {
                         <p className="text-sm mt-2">Crea tu primera denuncia para comenzar</p>
                     </div>
                 ) : (
-                    <div className="space-y-3 max-h-[500px] overflow-y-auto">
+                    //max-h-[500px]
+                    <div className="space-y-3 overflow-y-auto">
                         {denuncias.map((denuncia) => {
                             const estilo = getEstadoStyle(denuncia.estado);
                             return (
@@ -161,7 +163,7 @@ export const BentoFour = () => {
             {/* Modal para ver detalles */}
             {selectedDenuncia && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 backdrop-blur-xs p-4"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 backdrop-blur-xs p-4 "
                     onClick={() => setSelectedDenuncia(null)}
                 >
                     <div

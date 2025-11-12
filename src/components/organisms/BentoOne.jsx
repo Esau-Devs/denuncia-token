@@ -9,9 +9,7 @@ export const BentoOne = () => {
     const totalEnProceso = denuncias.filter(d => d.estado === "en proceso").length;
 
     useEffect(() => {
-        console.log('\n👤 [USER INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log('👤 [USER INFO] Iniciando carga de datos de usuario');
-        console.log(`👤 [USER INFO] Timestamp: ${new Date().toISOString()}`);
+
 
         const fetchDatosUsuario = async () => {
             try {
@@ -30,11 +28,11 @@ export const BentoOne = () => {
 
                 // Intentar leer la respuesta como texto primero
                 const responseText = await response.text();
-                console.log(`📨 [USER INFO] Response body (raw):`, responseText);
+
 
                 if (!response.ok) {
 
-                    console.error(`❌ [USER INFO] Response:`, responseText);
+
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }
 
@@ -44,8 +42,7 @@ export const BentoOne = () => {
                     data = responseText ? JSON.parse(responseText) : {};
 
                 } catch (parseError) {
-                    console.error('❌ [USER INFO] Error al parsear JSON:', parseError);
-                    console.error('❌ [USER INFO] Texto recibido:', responseText);
+
                     throw new Error('Respuesta del servidor no es JSON válido');
                 }
 
@@ -53,7 +50,7 @@ export const BentoOne = () => {
 
 
             } catch (error) {
-                console.error('\n💥 [USER INFO] Error al cargar datos:');
+
                 console.error('   Error:', error instanceof Error ? error.message : String(error));
                 console.error('   Stack:', error instanceof Error ? error.stack : 'N/A');
 
@@ -97,7 +94,7 @@ export const BentoOne = () => {
             }, 100);
 
         } catch (err) {
-            console.error('\n💥 [LOGOUT] Error durante el logout:');
+
             console.error('   Error:', err instanceof Error ? err.message : String(err));
 
 

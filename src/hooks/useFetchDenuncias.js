@@ -5,45 +5,46 @@ export function useFetchDenuncias() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchDenuncias = async () => {
-            try {
-                setLoading(true);
 
-                console.log('✅ Haciendo petición a API con cookies...');
+    const fetchDenuncias = async () => {
+        try {
+            setLoading(true);
 
-                const response = await fetch(`/api/denuncias/mis-denuncias`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'same-origin', // 🔥 Envía cookies automáticamente
-                });
+            console.log('✅ Haciendo petición a API con cookies...');
+
+            const response = await fetch(`/api/denuncias/mis-denuncias`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin', // 🔥 Envía cookies automáticamente
+            });
 
 
 
-                if (!response.ok) {
-                    if (response.status === 401) {
+            if (!response.ok) {
+                if (response.status === 401) {
 
-                        window.location.href = '/login';
-                        return;
-                    }
-                    throw new Error('Error al obtener las denuncias');
+                    window.location.href = '/login';
+                    return;
                 }
-
-                const data = await response.json();
-
-                setDenuncias(data);
-            } catch (err) {
-
-                setError(err.message);
-            } finally {
-                setLoading(false);
+                throw new Error('Error al obtener las denuncias');
             }
-        };
 
+            const data = await response.json();
+
+            setDenuncias(data);
+        } catch (err) {
+
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchDenuncias();
-    }, []);
+    }, [fetchDenuncias]);
 
     return { denuncias, loading, error };
 }
