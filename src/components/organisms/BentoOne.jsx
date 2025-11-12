@@ -1,12 +1,32 @@
-import React from 'react'
+import React, { use } from 'react'
 import { useFetchDenuncias } from '../../hooks/useFetchDenuncias';
 
 export const BentoOne = () => {
+    const [datosUsuario, setDatosUsuario] = React.useState([]);
     const { denuncias } = useFetchDenuncias();
     const totalResueltas = denuncias.filter(d => d.estado === "resuelta").length;
     const totalPendientes = denuncias.filter(d => d.estado === "pendiente").length;
     const totalEnProceso = denuncias.filter(d => d.estado === "en proceso").length;
 
+
+    useEffect(() => {
+
+        const fetchDatosUsuario = async () => {
+
+            const response = await fetch('/api/usuario/me', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'same-origin', // 🔥 Envía cookies automáticamente
+            });
+
+            const data = await response.json();
+            setDatosUsuario(data);
+        };
+
+        fetchDatosUsuario();
+    }, []);
 
     const handleLogout = async () => {
 
@@ -90,13 +110,13 @@ export const BentoOne = () => {
                 <div
                     className="h-16 w-16 rounded-full overflow-hidden bg-gradient-to-br from-[#2a3b5d] to-[#0c3b87] flex items-center justify-center flex-shrink-0"
                 >
-                    <span className="text-white text-2xl font-bold">MG</span>
+                    <span className="text-white text-2xl font-bold">MG </span>
                 </div>
                 <div className="flex-1 min-w-0">
                     <h2
                         className="text-xl font-semibold text-gray-900 mb-2"
                     >
-                        María González
+                        {datosUsuario.nombre || 'Nombre de Usuario'}
                     </h2>
                     <div className="flex gap-2 flex-wrap">
                         <span
@@ -121,7 +141,26 @@ export const BentoOne = () => {
                         ></path>
                     </svg>
                     <span className="font-medium">ID:</span>
-                    <span className="text-gray-600">01482303-1</span>
+                    <span className="text-gray-600">{datosUsuario.id || 'ID de Usuario'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <svg
+                        className="w-4 h-4 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        ></path>
+                    </svg>
+                    <div className="flex lg:flex-row gap-2">
+                        <span className="font-medium">Genero:</span>
+                        <span className="text-gray-600"> {datosUsuario.genero || 'Género de Usuario'}</span>
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -140,7 +179,7 @@ export const BentoOne = () => {
                     </svg>
                     <div className="flex lg:flex-row gap-2">
                         <span className="font-medium">Miembro desde:</span>
-                        <span className="text-gray-600"> Enero 2024</span>
+                        <span className="text-gray-600"> {datosUsuario.fechaCreacion || 'Fecha de Creación'}</span>
                     </div>
                 </div>
             </div>
