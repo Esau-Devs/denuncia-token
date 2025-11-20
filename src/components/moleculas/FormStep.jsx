@@ -7,6 +7,7 @@ function FormularioDenuncia({ isOpen, onClose }) {
 
   const [formData, setFormData] = useState({
     category: '',
+    customCategory: '', // Nuevo campo
     location: '',
     description: '',
     evidence: [], // Array de archivos
@@ -88,7 +89,7 @@ function FormularioDenuncia({ isOpen, onClose }) {
 
       // Limpiar errores
       if (errores[name]) {
-        const campos = ["category", "description", "location"];
+        const campos = ["category", "customCategory", "description", "location"];
         if (campos.includes(name) && value.trim() !== "") {
           setErrores((prev) => {
             const updated = { ...prev };
@@ -113,15 +114,26 @@ function FormularioDenuncia({ isOpen, onClose }) {
   // ============================================
   const validarPasoActual = () => {
     const nuevosErrores = {};
-    if (step === 1 && !formData.category.trim()) {
-      nuevosErrores.category = "Debe seleccionar una categoría.";
+
+    if (step === 1) {
+      if (!formData.category.trim()) {
+        nuevosErrores.category = "Debe seleccionar una categoría.";
+      }
+
+      // Validar campo personalizado si se seleccionó "otro"
+      if (formData.category === 'otro' && !formData.customCategory.trim()) {
+        nuevosErrores.customCategory = "Debe especificar el tipo de denuncia.";
+      }
+
+      if (!formData.location.trim()) {
+        nuevosErrores.location = "Debe ingresar una ubicación.";
+      }
     }
-    if (step === 1 && !formData.location.trim()) {
-      nuevosErrores.location = "Debe seleccionar una ubicación.";
-    }
+
     if (step === 2 && !formData.description.trim()) {
       nuevosErrores.description = "Debe ingresar una descripción.";
     }
+
     setErrores(nuevosErrores);
     return Object.keys(nuevosErrores).length === 0;
   };
@@ -141,11 +153,16 @@ function FormularioDenuncia({ isOpen, onClose }) {
     try {
       setLoading(true);
 
+      // Determinar la categoría final
+      const finalCategory = formData.category === 'otro'
+        ? formData.customCategory
+        : formData.category;
+
       // Crear FormData para enviar archivos + datos
       const formDataToSend = new FormData();
 
       // Agregar datos de la denuncia
-      formDataToSend.append('category', formData.category);
+      formDataToSend.append('category', finalCategory);
       formDataToSend.append('location', formData.location);
       formDataToSend.append('description', formData.description);
 
@@ -158,7 +175,7 @@ function FormularioDenuncia({ isOpen, onClose }) {
 
       console.log("=".repeat(60));
       console.log("🔍 ENVIANDO DENUNCIA:");
-      console.log("Category:", formData.category);
+      console.log("Category:", finalCategory);
       console.log("Location:", formData.location);
       console.log("Description:", formData.description);
       console.log("Files:", formData.evidence.length, "archivo(s)");
@@ -189,6 +206,7 @@ function FormularioDenuncia({ isOpen, onClose }) {
       // Resetear formulario
       setFormData({
         category: '',
+        customCategory: '',
         location: '',
         description: '',
         evidence: [],
@@ -214,6 +232,7 @@ function FormularioDenuncia({ isOpen, onClose }) {
     setErrores({});
     setFormData({
       category: '',
+      customCategory: '',
       location: '',
       description: '',
       evidence: [],
@@ -222,6 +241,11 @@ function FormularioDenuncia({ isOpen, onClose }) {
   };
 
   if (!isOpen) return null;
+
+  // Determinar la categoría a mostrar en el resumen
+  const displayCategory = formData.category === 'otro'
+    ? formData.customCategory
+    : formData.category;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 backdrop-blur-xs p-4">
@@ -296,6 +320,28 @@ function FormularioDenuncia({ isOpen, onClose }) {
                 </select>
                 {errores.category && <p className="text-red-500 text-sm mt-1">{errores.category}</p>}
               </div>
+
+              {/* Campo adicional cuando se selecciona "Otro" */}
+              {formData.category === 'otro' && (
+                <div className="mb-4 animate-fade-in">
+                  <label htmlFor="customCategory" className="block font-semibold mb-1">
+                    Especifique la categoría:
+                  </label>
+                  <input
+                    type="text"
+                    id="customCategory"
+                    name="customCategory"
+                    value={formData.customCategory}
+                    onChange={handleChange}
+                    placeholder="Escriba el tipo de denuncia"
+                    required
+                    className="w-full border border-gray-300 rounded px-3 py-2 focus:border-blue-900 focus:outline-none focus:ring-1 focus:ring-blue-900"
+                  />
+                  {errores.customCategory && (
+                    <p className="text-red-500 text-sm mt-1">{errores.customCategory}</p>
+                  )}
+                </div>
+              )}
 
               <div className="mb-4">
                 <label htmlFor="location" className="block font-semibold mb-1">Ubicación:</label>
@@ -427,7 +473,9 @@ function FormularioDenuncia({ isOpen, onClose }) {
               <div className="mb-6 bg-gray-50 shadow-lg rounded-lg p-4 text-base">
                 <h4 className="text-lg font-bold text-blue-900">Resumen de su denuncia</h4>
                 <div className="text-sm space-y-3 mt-3 text-gray-700">
-                  <div><strong>Categoría:</strong> {formData.category}</div>
+                  <div>
+                    <strong>Categoría:</strong> {displayCategory || 'No especificada'}
+                  </div>
                   <div><strong>Ubicación:</strong> {formData.location || 'No proporcionada'}</div>
                   <div><strong>Descripción:</strong>
                     <p className='bg-gray-100 rounded-sm p-3'>

@@ -3,45 +3,298 @@ import Layout from "@/layouts/Layout.astro";
 ---
 
 <Layout>
-  <section class="max-w-4xl mx-auto px-4 py-12 *:text-black">
-    <h1 class="text-3xl md:text-4xl font-bold text-black mb-8">
-      Pol&iacute;tica de Privacidad
-    </h1>
+  <section class="max-w-4xl mx-auto px-4 py-12">
+    <!-- Botón de regreso -->
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 text-blue-600
+    hover:text-blue-800 mb-8 transition-colors group"
+    >
+      <svg
+        class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      Volver al inicio
+    </a>
 
-    <p class="mb-4">
-      La confidencialidad de los datos que ingresas es esencial para nosotros.
-      Aqu&iacute; te explicamos cómo protegemos tu privacidad:
-    </p>
+    <div class="mb-12">
+      <div class="flex items-center gap-3 mb-4">
+        <div
+          class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center"
+        >
+          <svg
+            class="w-7 h-7 text-blue-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+            ></path>
+          </svg>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900">
+          Política de Privacidad
+        </h1>
+      </div>
+      <p class="text-lg text-gray-600">
+        Tu privacidad es nuestra prioridad. Conoce cómo protegemos tu
+        información personal.
+      </p>
+    </div>
 
-    <ul class="list-disc pl-6 space-y-3">
-      <li>
-        <span class="font-semibold text-black"
-          >No recopilamos datos personales</span
-        > a menos que t&uacute; lo decidas voluntariamente.
-      </li>
-      <li>
-        Todo lo que ingresas es <span class="font-semibold text-black"
-          >cifrado con GPG y PKI</span
-        > antes de almacenarse.
-      </li>
-      <li>
-        <span class="font-semibold text-black"
-          >No usamos cookies ni trackers</span
-        > que puedan identificarte.
-      </li>
-      <li>
-        <span class="font-semibold text-black"
-          >La base de datos est&aacute; cifrada</span
-        > y los accesos son controlados estrictamente.
-      </li>
-      <li>
-        No compartimos tus datos con terceros, gobiernos ni entidades privadas.
-      </li>
-    </ul>
+    <div
+      class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-8 mb-8"
+    >
+      <p class="text-lg text-gray-800 leading-relaxed">
+        La <span class="font-semibold">confidencialidad de los datos</span> que ingresas
+        es esencial para nosotros. Este sistema ha sido diseñado siguiendo los más
+        altos estándares de ciberseguridad para garantizar la protección de tu información
+        personal.
+      </p>
+    </div>
 
-    <p class="mt-6">
-      Al usar esta plataforma, conf&iacute;as en nosotros. Por eso, seguimos los
-      m&aacute;s altos est&aacute;ndares de privacidad digital.
-    </p>
+    <div class="space-y-6 mb-12">
+      <div
+        class="bg-white rounded-xl p-6 shadow-md border-l-4 border-green-500"
+      >
+        <div class="flex items-start gap-4">
+          <div
+            class="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-6 h-6 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-900 text-lg mb-2">
+              Recopilación mínima de datos
+            </h3>
+            <p class="text-gray-700">
+              Solo recopilamos tu número de DUI para el registro, el cual es <span
+                class="font-semibold">cifrado inmediatamente</span
+              >
+              utilizando protocolos criptográficos GPG antes de almacenarse. No solicitamos
+              nombres completos, correos electrónicos ni direcciones a menos que
+              decidas proporcionarlos voluntariamente.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-blue-500">
+        <div class="flex items-start gap-4">
+          <div
+            class="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-6 h-6 text-blue-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+              ></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-900 text-lg mb-2">
+              Cifrado de extremo a extremo
+            </h3>
+            <p class="text-gray-700">
+              Todo lo que ingresas (denuncias, evidencias, datos personales) es <span
+                class="font-semibold">cifrado con GPG</span
+              >
+              antes de ser transmitido y almacenado. Utilizamos HashiCorp Vault para
+              la gestión segura de claves de cifrado, garantizando que solo el personal
+              autorizado pueda descifrar la información.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white rounded-xl p-6 shadow-md border-l-4 border-purple-500"
+      >
+        <div class="flex items-start gap-4">
+          <div
+            class="flex-shrink-0 w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-6 h-6 text-purple-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+              ></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-900 text-lg mb-2">
+              Sin cookies ni rastreadores
+            </h3>
+            <p class="text-gray-700">
+              <span class="font-semibold">No usamos cookies de rastreo</span> ni
+              herramientas de análisis que puedan identificarte. Solo utilizamos
+              cookies técnicas esenciales para mantener tu sesión autenticada de
+              forma segura.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white rounded-xl p-6 shadow-md border-l-4 border-orange-500"
+      >
+        <div class="flex items-start gap-4">
+          <div
+            class="flex-shrink-0 w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-6 h-6 text-orange-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
+              ></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-900 text-lg mb-2">
+              Base de datos cifrada
+            </h3>
+            <p class="text-gray-700">
+              La base de datos PostgreSQL está <span class="font-semibold"
+                >cifrada en reposo</span
+              > y los accesos son controlados mediante políticas de seguridad estrictas
+              (RLS - Row Level Security). Utilizamos Supabase como plataforma backend
+              con autenticación robusta.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl p-6 shadow-md border-l-4 border-red-500">
+        <div class="flex items-start gap-4">
+          <div
+            class="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-6 h-6 text-red-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-900 text-lg mb-2">
+              Cero compartición con terceros
+            </h3>
+            <p class="text-gray-700">
+              <span class="font-semibold">No compartimos tus datos</span> con terceros,
+              gobiernos, entidades privadas ni proveedores de servicios externos.
+              La información solo es accesible por personal designado de la Fiscalía
+              General de la República para fines de investigación legal.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl p-8"
+    >
+      <div class="flex items-start gap-4">
+        <svg
+          class="w-8 h-8 text-indigo-600 flex-shrink-0"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+          ></path>
+        </svg>
+        <div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">
+            Compromiso con tu seguridad
+          </h3>
+          <p class="text-gray-700 leading-relaxed mb-3">
+            Al usar esta plataforma, confías en nosotros. Por eso, seguimos los
+            más altos estándares de privacidad digital y ciberseguridad,
+            cumpliendo con:
+          </p>
+          <ul class="space-y-2 text-gray-700">
+            <li class="flex items-center gap-2">
+              <span class="text-indigo-600">•</span>
+              <span
+                ><span class="font-semibold"
+                  >Ley de Protección de Datos Personales</span
+                > de El Salvador</span
+              >
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-indigo-600">•</span>
+              <span
+                ><span class="font-semibold"
+                  >Ley de Acceso a la Información Pública (LAIP)</span
+                ></span
+              >
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-indigo-600">•</span>
+              <span
+                ><span class="font-semibold">Código Penal</span> (Capítulo de Delitos
+                Informáticos)</span
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </section>
 </Layout>

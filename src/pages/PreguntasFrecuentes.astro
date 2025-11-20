@@ -3,66 +3,245 @@ import Layout from "@/layouts/Layout.astro";
 ---
 
 <Layout>
-  <section class="max-w-4xl mx-auto px-4 py-12 text-black">
-    <h1 class="text-3xl md:text-4xl font-bold text-black mb-8">
+  <section class="max-w-4xl mx-auto px-4 py-12">
+    <!-- Botón de regreso -->
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 text-blue-600
+    hover:text-blue-800 mb-8 transition-colors group"
+    >
+      <svg
+        class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      Volver al inicio
+    </a>
+
+    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
       Preguntas Frecuentes
     </h1>
+    <p class="text-lg text-gray-600 mb-12">
+      Respuestas a las dudas más comunes sobre nuestra plataforma de denuncias
+      seguras
+    </p>
 
     <div class="space-y-6">
-      <article>
-        <h2 class="text-xl font-semibold text-black">
-          ¿Puedo hacer una denuncia de forma completamente anónima?
-        </h2>
-        <p>
-          S&iacute;. Nuestro sistema est&aacute; dise&ntilde;ado para proteger
-          tu identidad. No pedimos nombres, correos, ni datos personales. Puedes
-          denunciar sin temor.
-        </p>
+      <article
+        class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow border border-gray-100"
+      >
+        <div class="flex items-start gap-4">
+          <div
+            class="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-6 h-6 text-blue-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h2 class="text-xl font-semibold text-gray-900 mb-3">
+              ¿Puedo hacer una denuncia de forma completamente anónima?
+            </h2>
+            <p class="text-gray-700 leading-relaxed">
+              Sí. Nuestro sistema está diseñado para proteger tu identidad
+              utilizando cifrado de extremo a extremo. Tu registro se realiza
+              con tu DUI, pero este dato se cifra inmediatamente antes de
+              almacenarse, garantizando que solo el personal autorizado de la
+              Fiscalía General de la República pueda acceder a la información
+              para fines de trazabilidad legal.
+            </p>
+          </div>
+        </div>
       </article>
 
-      <article>
-        <h2 class="text-xl font-semibold text-black">
-          ¿Cómo se protege mi informaci&oacute;?
-        </h2>
-        <p>
-          Usamos cifrado avanzado (GPG + PKI) para asegurar que tu denuncia solo
-          pueda ser le&iacute;da por personal autorizado. Los datos viajan
-          cifrados desde tu navegador hasta nuestra base de datos.
-        </p>
+      <article
+        class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow border border-gray-100"
+      >
+        <div class="flex items-start gap-4">
+          <div
+            class="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-6 h-6 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h2 class="text-xl font-semibold text-gray-900 mb-3">
+              ¿Cómo se protege mi información?
+            </h2>
+            <p class="text-gray-700 leading-relaxed">
+              Implementamos protocolos de cifrado criptográficos avanzados
+              mediante GPG (GNU Privacy Guard) para asegurar que tu denuncia
+              solo pueda ser leída por personal autorizado. Los datos viajan
+              cifrados desde tu navegador hasta nuestra base de datos
+              PostgreSQL, donde se almacenan de forma segura. Utilizamos
+              HashiCorp Vault para la gestión centralizada de claves de cifrado.
+            </p>
+          </div>
+        </div>
       </article>
 
-      <article>
-        <h2 class="text-xl font-semibold text-black">
-          ¿Qué tipo de denuncias puedo enviar?
-        </h2>
-        <p>
-          Denuncias relacionadas con corrupci&oacute;n, abuso de poder,
-          violencia, discriminaci&oacute;n, acoso, negligencia, entre otros.
-          Cualquier situación grave puede ser reportada.
-        </p>
+      <article
+        class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow border border-gray-100"
+      >
+        <div class="flex items-start gap-4">
+          <div
+            class="flex-shrink-0 w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-6 h-6 text-purple-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h2 class="text-xl font-semibold text-gray-900 mb-3">
+              ¿Qué tipo de denuncias puedo enviar?
+            </h2>
+            <p class="text-gray-700 leading-relaxed">
+              Puedes reportar delitos como corrupción, narcotráfico, violencia,
+              abuso, fraude, extorsión y otros actos criminales. La plataforma
+              acepta evidencia digital en formato de imágenes, documentos PDF y
+              archivos de audio que respalden tu denuncia.
+            </p>
+          </div>
+        </div>
       </article>
 
-      <article>
-        <h2 class="text-xl font-semibold text-black">
-          ¿Qui&eacute;n recibe mi denuncia?
-        </h2>
-        <p>
-          Solo un grupo de personas autorizadas accede a los reportes, y
-          únicamente mediante una clave privada que descifra la
-          informaci&oacute;n.
-        </p>
+      <article
+        class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow border border-gray-100"
+      >
+        <div class="flex items-start gap-4">
+          <div
+            class="flex-shrink-0 w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-6 h-6 text-orange-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h2 class="text-xl font-semibold text-gray-900 mb-3">
+              ¿Quién recibe mi denuncia?
+            </h2>
+            <p class="text-gray-700 leading-relaxed">
+              Solo el personal autorizado de la Fiscalía General de la República
+              con autenticación verificada puede acceder a los reportes. El
+              sistema utiliza autenticación robusta y descifrado automático
+              controlado por el backend, asegurando que ninguna persona no
+              autorizada pueda leer tu denuncia.
+            </p>
+          </div>
+        </div>
       </article>
 
-      <article>
-        <h2 class="text-xl font-semibold text-black">
-          ¿Puedo recibir una respuesta o seguimiento?
-        </h2>
-        <p>
-          S&iacute;. Puedes dejar un medio de contacto opcional cifrado. Si
-          decides no dejar nada, tu denuncia seguir&aacute; siendo recibida y
-          tratada con seriedad.
-        </p>
+      <article
+        class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow border border-gray-100"
+      >
+        <div class="flex items-start gap-4">
+          <div
+            class="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-6 h-6 text-red-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+              ></path>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h2 class="text-xl font-semibold text-gray-900 mb-3">
+              ¿Puedo recibir seguimiento de mi caso?
+            </h2>
+            <p class="text-gray-700 leading-relaxed">
+              Sí. Una vez autenticado en la plataforma con tu DUI, podrás
+              consultar el estado de tus denuncias (Pendiente, En Proceso,
+              Resuelta). El personal de la FGR actualiza el estado de los casos,
+              permitiéndote dar seguimiento al proceso de investigación de forma
+              segura.
+            </p>
+          </div>
+        </div>
       </article>
+    </div>
+
+    <div class="mt-12 bg-blue-50 border border-blue-200 rounded-xl p-6">
+      <div class="flex items-start gap-4">
+        <svg
+          class="w-6 h-6 text-blue-600 flex-shrink-0 mt-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">
+            ¿Tienes más preguntas?
+          </h3>
+          <p class="text-gray-700">
+            Este sistema cumple con la Ley de Protección de Datos Personales y
+            el marco legal salvadoreño para garantizar la confidencialidad e
+            integridad de tu información.
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 </Layout>

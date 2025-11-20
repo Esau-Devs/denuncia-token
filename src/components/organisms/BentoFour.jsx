@@ -5,6 +5,7 @@ import { useFetchDenuncias } from '../../hooks/useFetchDenuncias';
 export const BentoFour = () => {
     const { denuncias, loading, error } = useFetchDenuncias();
     const [selectedDenuncia, setSelectedDenuncia] = useState(null);
+    // Función para listar los buckets de Supabase Storage
 
 
 
@@ -147,7 +148,7 @@ export const BentoFour = () => {
                                                     />
                                                 </svg>
                                             )}
-                                            {denuncia.estado.charAt(0).toUpperCase() + denuncia.estado.slice(1)}
+                                            {statusMap[denuncia.estado]}
                                         </span>
                                     </div>
                                     <div className="flex items-center justify-between">
@@ -195,7 +196,7 @@ export const BentoFour = () => {
                                 <div>
                                     <p className="text-sm text-gray-500">Estado</p>
                                     <p className="text-lg font-semibold text-gray-900 capitalize">
-                                        {selectedDenuncia.estado}
+                                        {statusMap[selectedDenuncia.estado]}
                                     </p>
                                 </div>
                                 <div className="text-right">
@@ -286,7 +287,7 @@ export const BentoFour = () => {
 
                             {/* ID de seguimiento */}
                             <div className="pt-4 border-t">
-                                <p className="text-xs text-gray-500">ID de seguimiento</p>
+                                <p className="text-xs text-gray-500">ID de denuncia</p>
                                 <p className="text-xs font-mono text-gray-600 break-all">{selectedDenuncia.id}</p>
                             </div>
                         </div>
@@ -295,7 +296,7 @@ export const BentoFour = () => {
                         <div className="sticky bottom-0 bg-gray-50 px-6 py-4 border-t border-gray-200">
                             <button
                                 onClick={() => setSelectedDenuncia(null)}
-                                className="w-full bg-[#1a73e8] text-white py-2 px-4 rounded-lg hover:bg-[#1557b0] transition-colors font-medium cursor-pointer"
+                                className="w-full bg-[#0c3b87]   text-white py-2 px-4 rounded-lg hover:bg-[#2751a5] transition-colors font-medium cursor-pointer"
                             >
                                 Cerrar
                             </button>

@@ -14,8 +14,6 @@ export const BentoOne = () => {
         const fetchDatosUsuario = async () => {
             try {
                 const apiUrl = '/api/usuario/me';
-                console.log(`📤 [USER INFO] Petición a: ${apiUrl}`);
-
                 const response = await fetch(apiUrl, {
                     method: 'GET',
                     headers: {
@@ -23,19 +21,11 @@ export const BentoOne = () => {
                     },
                     credentials: 'same-origin',
                 });
-
-
-
                 // Intentar leer la respuesta como texto primero
                 const responseText = await response.text();
-
-
                 if (!response.ok) {
-
-
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }
-
                 // Intentar parsear el JSON
                 let data;
                 try {

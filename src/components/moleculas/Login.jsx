@@ -80,8 +80,7 @@ export default function Login() {
         const apiUrl = '/api/auth/login';
 
         try {
-            console.log('[LOGIN] 📤 Enviando credenciales a:', apiUrl);
-            console.log('[LOGIN] 📋 DUI:', formData.dui);
+
 
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -98,15 +97,12 @@ export default function Login() {
                 redirect: 'manual'
             });
 
-            console.log('[LOGIN] 📨 Respuesta recibida - Status:', response.status);
-            console.log('[LOGIN] 📨 Response type:', response.type);
+
 
             // 🔥 CAMBIO CRÍTICO: Manejar correctamente el 302
             // Cuando redirect: 'manual', el response.type será 'opaqueredirect' para 302
             if (response.type === 'opaqueredirect' || response.status === 0) {
-                console.log('[LOGIN] ✅ Redirección detectada (302) - Login exitoso');
-                console.log('[LOGIN] 🍪 Cookie establecida por Astro');
-                console.log('[LOGIN] 🔄 Forzando recarga completa de la página...');
+                console.log('[LOGIN] ✅ Login exitoso - redirección detectada');
 
                 // Forzar recarga completa para que el middleware valide la nueva cookie
                 // Usamos window.location.href en lugar de replace para asegurar recarga
@@ -124,7 +120,7 @@ export default function Login() {
             let data;
             try {
                 data = await response.json();
-                console.log('[LOGIN] 📄 Datos de respuesta:', data);
+
             } catch (jsonError) {
                 console.error('[LOGIN] ❌ Error parseando JSON:', jsonError);
                 data = { detail: 'Error desconocido' };
@@ -142,16 +138,15 @@ export default function Login() {
                 }, 3000);
             } else {
                 console.error('[LOGIN] ❌ Error del servidor:', response.status, data);
-                // Aquí puedes agregar un mensaje de error genérico si lo deseas
-                alert('Error del servidor. Por favor, intenta de nuevo.');
+
             }
 
         } catch (error) {
             console.error('[LOGIN] 💥 Error de red/conexión:', error);
-            alert('Error de conexión. Verifica tu internet e intenta de nuevo.');
+
         } finally {
             setIsLoading(false);
-            console.log('[LOGIN] 🏁 Proceso de login finalizado');
+
         }
     };
 
