@@ -16,7 +16,7 @@ export const BentoFour = () => {
                 badge: 'border-[#0c3b87] bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent',
                 dot: 'bg-[#1a73e8]',
             },
-            'en proceso': {
+            'en_proceso': {
                 bg: 'bg-[#e8f0fe]',
                 border: 'border-[#1a73e8]',
                 badge: 'border-[#0c3b87] bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent',
@@ -30,6 +30,11 @@ export const BentoFour = () => {
             },
         };
         return styles[estado?.toLowerCase()] || styles.pendiente;
+    };
+    const statusMap = {
+        pendiente: 'Pendiente',
+        en_proceso: 'En proceso',
+        resuelta: 'Resuelta'
     };
 
     const formatDate = (dateString) => {
@@ -110,7 +115,7 @@ export const BentoFour = () => {
 
                     <div className="space-y-3 overflow-y-auto"> {/*max-h-[500px]*/}
                         {denuncias.map((denuncia) => {
-                            const estilo = getEstadoStyle(denuncia.estado);
+                            const estilo = getEstadoStyle(statusMap[denuncia.estado]);
                             return (
                                 <div
                                     key={denuncia.id}

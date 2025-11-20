@@ -6,7 +6,7 @@ export const BentoOne = () => {
     const { denuncias } = useFetchDenuncias();
     const totalResueltas = denuncias.filter(d => d.estado === "resuelta").length;
     const totalPendientes = denuncias.filter(d => d.estado === "pendiente").length;
-    const totalEnProceso = denuncias.filter(d => d.estado === "en proceso").length;
+    const totalEnProceso = denuncias.filter(d => d.estado === "en_proceso").length;
 
     useEffect(() => {
 
