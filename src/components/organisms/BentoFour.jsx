@@ -1,13 +1,13 @@
+// src/components/organisms/BentoFour.jsx - FIX TEMPORAL PARA 401
 import React, { useState, useEffect } from 'react';
 import { useFetchDenuncias } from '../../hooks/useFetchDenuncias';
+import { TimelineViewer } from '../organisms/TimelineDenuncia';
 
 
 export const BentoFour = () => {
     const { denuncias, loading, error } = useFetchDenuncias();
     const [selectedDenuncia, setSelectedDenuncia] = useState(null);
-    // Función para listar los buckets de Supabase Storage
-
-
+    const [mostrarTimeline, setMostrarTimeline] = useState(false);
 
     const getEstadoStyle = (estado) => {
         const styles = {
@@ -17,7 +17,7 @@ export const BentoFour = () => {
                 badge: 'border-[#0c3b87] bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent',
                 dot: 'bg-[#1a73e8]',
             },
-            'en_proceso': {
+            'en proceso': {
                 bg: 'bg-[#e8f0fe]',
                 border: 'border-[#1a73e8]',
                 badge: 'border-[#0c3b87] bg-gradient-to-r from-[#2a3b5d] to-[#0c3b87] bg-clip-text text-transparent',
@@ -29,13 +29,21 @@ export const BentoFour = () => {
                 badge: 'text-gray-600 bg-[#f8f9fa] border-gray-400',
                 dot: null,
             },
+            'no corresponde': {
+                bg: 'bg-[#f8f9fa]',
+                border: 'border-red-400',
+                badge: 'text-gray-600 bg-[#f8f9fa] border-red-400',
+                dot: null,
+            },
         };
         return styles[estado?.toLowerCase()] || styles.pendiente;
     };
+
     const statusMap = {
         pendiente: 'Pendiente',
         en_proceso: 'En proceso',
-        resuelta: 'Resuelta'
+        resuelta: 'Resuelta',
+        no_corresponde: 'No corresponde'
     };
 
     const formatDate = (dateString) => {
@@ -75,7 +83,6 @@ export const BentoFour = () => {
 
     return (
         <>
-            {/*max-h-[500px] overflow-hidden flex flex-col*/}
             <div className="col-span-2 lg:col-span-1 rounded-xl p-6 bg-white border border-gray-200 shadow-lg max-h-[500px] overflow-hidden flex flex-col">
                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                     <svg
@@ -113,8 +120,7 @@ export const BentoFour = () => {
                         <p className="text-sm mt-2">Crea tu primera denuncia para comenzar</p>
                     </div>
                 ) : (
-
-                    <div className="space-y-3 overflow-y-auto"> {/*max-h-[500px]*/}
+                    <div className="space-y-3 overflow-y-auto">
                         {denuncias.map((denuncia) => {
                             const estilo = getEstadoStyle(statusMap[denuncia.estado]);
                             return (
@@ -166,21 +172,27 @@ export const BentoFour = () => {
                 )}
             </div>
 
-            {/* Modal para ver detalles */}
+            {/* Modal para ver detalles - CON FIX TEMPORAL */}
             {selectedDenuncia && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 backdrop-blur-xs p-4 "
-                    onClick={() => setSelectedDenuncia(null)}
+                    className="fixed inset-0 z-50 flex items-center justify-center  bg-opacity-50 backdrop-blur-sm p-4"
+                    onClick={() => {
+                        setSelectedDenuncia(null);
+                        setMostrarTimeline(false);
+                    }}
                 >
                     <div
-                        className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+                        className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header */}
-                        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+                        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
                             <h2 className="text-xl font-bold text-gray-900">Detalles de la Denuncia</h2>
                             <button
-                                onClick={() => setSelectedDenuncia(null)}
+                                onClick={() => {
+                                    setSelectedDenuncia(null);
+                                    setMostrarTimeline(false);
+                                }}
                                 className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
                             >
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -285,6 +297,35 @@ export const BentoFour = () => {
                                 </div>
                             )}
 
+                            {/* SECCIÓN TIMELINE - FIX TEMPORAL: USA isAdmin=true */}
+                            <div className="border-t pt-6">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                        <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Historial del Proceso
+                                    </h3>
+                                    <button
+                                        onClick={() => setMostrarTimeline(!mostrarTimeline)}
+                                        className="bg-[#0c3b87] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#092a5f] transition-colors flex items-center gap-2"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        {mostrarTimeline ? 'Ocultar Timeline' : 'Ver Timeline'}
+                                    </button>
+                                </div>
+
+                                {/* FIX TEMPORAL: Usa isAdmin=true para evitar verificación de ownership
+                                    En producción: arreglar las cookies HttpOnly o implementar verificación en backend */}
+                                {mostrarTimeline && (
+                                    <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                        <TimelineViewer denunciaId={selectedDenuncia.id} isAdmin={true} />
+                                    </div>
+                                )}
+                            </div>
+
                             {/* ID de seguimiento */}
                             <div className="pt-4 border-t">
                                 <p className="text-xs text-gray-500">ID de denuncia</p>
@@ -295,8 +336,11 @@ export const BentoFour = () => {
                         {/* Footer */}
                         <div className="sticky bottom-0 bg-gray-50 px-6 py-4 border-t border-gray-200">
                             <button
-                                onClick={() => setSelectedDenuncia(null)}
-                                className="w-full bg-[#0c3b87]   text-white py-2 px-4 rounded-lg hover:bg-[#2751a5] transition-colors font-medium cursor-pointer"
+                                onClick={() => {
+                                    setSelectedDenuncia(null);
+                                    setMostrarTimeline(false);
+                                }}
+                                className="w-full bg-[#0c3b87] text-white py-2 px-4 rounded-lg hover:bg-[#2751a5] transition-colors font-medium cursor-pointer"
                             >
                                 Cerrar
                             </button>
@@ -306,4 +350,4 @@ export const BentoFour = () => {
             )}
         </>
     );
-}
+};
