@@ -173,13 +173,7 @@ function FormularioDenuncia({ isOpen, onClose }) {
         });
       }
 
-      console.log("=".repeat(60));
-      console.log("🔍 ENVIANDO DENUNCIA:");
-      console.log("Category:", finalCategory);
-      console.log("Location:", formData.location);
-      console.log("Description:", formData.description);
-      console.log("Files:", formData.evidence.length, "archivo(s)");
-      console.log("=".repeat(60));
+
 
       const response = await fetch(`/api/denuncias/crear`, {
         method: 'POST',
@@ -190,7 +184,7 @@ function FormularioDenuncia({ isOpen, onClose }) {
 
       const data = await response.json();
 
-      console.log("📥 Respuesta del servidor:", data);
+
       console.log("📥 Status:", response.status);
 
       if (!response.ok) {
@@ -198,7 +192,7 @@ function FormularioDenuncia({ isOpen, onClose }) {
         throw new Error(data.detail || 'Error desconocido');
       }
 
-      console.log('✅ Denuncia guardada correctamente:', data);
+      console.log('✅ Denuncia guardada correctamente');
 
       // Mostrar modal de éxito
       setModalVisible(true);

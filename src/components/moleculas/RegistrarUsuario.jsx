@@ -226,11 +226,7 @@ const RegistrarUsuario = () => {
             faceImage: faceImage,
         };
 
-        console.log(
-            "Datos enviados:", datosAEnviar,
-            "Largo DUI (caracteres):", duiImage ? duiImage.length : 'NULL/CERO',
-            "Largo FACE (caracteres):", faceImage ? faceImage.length : 'NULL/CERO'
-        );
+
 
         try {
 
